@@ -1,0 +1,30 @@
+[project]
+name = "hexlet-code"
+version = "0.1.0"
+description = "python-project-52"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "django-bootstrap5>=25.1",
+    "django>=5.1.4",
+    "python-dotenv>=1.0.1",
+    "ruff>=0.8.4",
+    "dj-database-url>=2.3.0",
+    "gunicorn>=23.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.9.10",
+]
+
+[tool.ruff]
+line-length = 80
+
+[tool.ruff.lint.extend-per-file-ignores]
+# init modules can contain the local imports, logic, unused imports
+"__init__.py" = ["F401"]
+
+[tool.ruff.lint]
+preview = true
+select = ["E", "F", "I", "C90"]
