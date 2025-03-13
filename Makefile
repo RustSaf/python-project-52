@@ -1,5 +1,5 @@
 install:
-	pip install --upgrade pip && uv install
+	pip install --upgrade pip && pip install uv
 
 test:
 	uv run pytest
