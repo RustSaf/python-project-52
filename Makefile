@@ -31,7 +31,7 @@ migrate:
 	python3 manage.py migrate
 
 collectstatic:
-	python manage.py collectstatic
+	python3 manage.py collectstatic
 
 render-start:
 	gunicorn task_manager.wsgi

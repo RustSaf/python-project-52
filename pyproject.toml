@@ -20,6 +20,7 @@ dev = [
 
 [tool.ruff]
 line-length = 80
+exclude = [".venv", "migrations", "task_manager/settings.py"]
 
 [tool.ruff.lint.extend-per-file-ignores]
 # init modules can contain the local imports, logic, unused imports
@@ -28,3 +29,4 @@ line-length = 80
 [tool.ruff.lint]
 preview = true
 select = ["E", "F", "I", "C90"]
+ignore = ["F401"]
