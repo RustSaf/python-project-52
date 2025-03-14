@@ -95,6 +95,15 @@ DATABASES = {
     }
 }
 
+# Replace the SQLite DATABASES configuration with PostgreSQL:
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         # Replace this value with your local database's connection string.
+#         default='postgresql://root:${SECRET_KEY}@127.0.0.1:5432/task_manager',
+#         conn_max_age=600
+#     )
+# }
+
 db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default'].update(db_from_env)
 

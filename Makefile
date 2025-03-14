@@ -28,17 +28,17 @@ package-install:
 #dev:
 #	poetry run flask --app page_analyzer:app run --debug
 migrate:
-	python3 manage.py migrate
+	uv run python3 manage.py migrate
 
 collectstatic:
-	python3 manage.py collectstatic --noinput
+	uv run python3 manage.py collectstatic --noinput
 
 render-start:
 	gunicorn task_manager.wsgi
 
-PORT ?= 8000
+#PORT ?= 8000
 #start:
-#	uv run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
+#	uv run gunicorn -w 5 -b 0.0.0.0:$(PORT) task_manager.wsgi
 
 .PHONY:
 	install
