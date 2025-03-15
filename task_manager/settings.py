@@ -33,6 +33,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # DEBUG = True
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
+# DEBUG = False
 
 ALLOWED_HOSTS = [
     "python-project-52-y53r.onrender.com",
@@ -52,7 +53,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 #    "django-bootstrap5",
     "task_manager",
-    "bootstrap5",
+    "django_bootstrap5",
 #    "hexlet_django_blog.article",
 ]
 

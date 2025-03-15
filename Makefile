@@ -19,11 +19,11 @@ check:
 build:
 	./build.sh
 
-publish:
-	uv publish --dry-run
+# publish:
+# 	uv publish --dry-run
 
-package-install:
-	python3 -m pip install --user dist/*.whl
+# package-install:
+# 	python3 -m pip install --user dist/*.whl
 
 #dev:
 #	poetry run flask --app page_analyzer:app run --debug
@@ -51,11 +51,12 @@ bootstrap:
 	selfcheck
 	check
 	build
-	publish
-	package-install
+#	publish
+#	package-install
 #	start
 #	dev
 	migrate
 	collectstatic
 	render-start
 	start
+	bootstrap
