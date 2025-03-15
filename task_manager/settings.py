@@ -143,15 +143,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_URL = "/static/"
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 WHITENOISE_MANIFEST_STRICT = False
 
-if DEBUG:
-    STATICFILES_DIRS=['staticfiles']
-    STATIC_ROOT = None
-else:
-    STATICFILES_DIRS=[]
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# if DEBUG:
+#     STATICFILES_DIRS=['staticfiles']
+#     STATIC_ROOT = None
+# else:
+#     STATICFILES_DIRS=[]
+#     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
