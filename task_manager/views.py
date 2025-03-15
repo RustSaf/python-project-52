@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 ##from django.views import View
 from django.views.generic.base import TemplateView
+from django.views.decorators.cache import never_cache
 
 
 ##def index(request):
@@ -18,23 +19,24 @@ class IndexView(TemplateView):
 ##       context = super().get_context_data(**kwargs)
 ##        context['who'] = 'World'
 ##        return context
+    @never_cache
     def index_view(request):
 ##    return redirect(reverse('article', kwargs={'tags': 'python', 'article_id': 42}))
 ##        return redirect(reverse('article:index', kwargs={'tags': 'python', 'article_id': 42}))
         return render(request, 'index.html')
 #       , context={'who': 'World',})
 
-
+@never_cache
 def users_view(request):
-    return render(request, 'users.html')
+    return render(request, 'users.html', context={'name': 'Пользователи'})
 
-
+@never_cache
 def login_view(request):
-    return render(request, 'login.html')
+    return render(request, 'login.html', context={'name': 'Вход'})
 
-
+@never_cache
 def users_create_view(request):
-    return render(request, 'create.html')
+    return render(request, 'create.html', context={'name': 'Регистрация'})
 ##def article(request):
 ##    return render(request, 'articles/index.html', context={
 ##        'article': 'hexlet-django-blog',
