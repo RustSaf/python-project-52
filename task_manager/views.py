@@ -28,15 +28,15 @@ class IndexView(TemplateView):
 
 @never_cache
 def users_view(request):
-    return render(request, 'users.html', context={'name': 'Пользователи'})
+    return render(request, 'users.html', context={'name': 'Users'})
 
 @never_cache
 def login_view(request):
-    return render(request, 'login.html', context={'name': 'Вход'})
+    return render(request, 'login.html', context={'name': 'Input'})
 
 @never_cache
 def users_create_view(request):
-    return render(request, 'create.html', context={'name': 'Регистрация'})
+    return render(request, 'create.html', context={'name': 'Registration'})
 ##def article(request):
 ##    return render(request, 'articles/index.html', context={
 ##        'article': 'hexlet-django-blog',

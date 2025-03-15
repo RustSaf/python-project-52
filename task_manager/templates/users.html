@@ -1,7 +1,5 @@
 
 {% extends "base.html" %}
-{% load i18n %}
-{% get_current_language as LANGUAGE_CODE %}
 
 
 {% block context %}
@@ -10,23 +8,23 @@
   <thead>
     <tr>
       <th>ID</th>
-      <th>Имя пользователя</th>
-      <th>Полное имя</th>
-      <th>Дата создания</th>
+      <th>Username</th>
+      <th>Full name</th>
+      <th>Creation date</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     
       <tr>
-        <td>1</td>
-        <td>ФИО</td>
-        <td>Имя Фамилия</td>
-        <td>27.01.2025 10:31</td>
+        <td>{{ id }}</td>
+        <td>{{ username }}</td>
+        <td>{{ fullname }}</td>
+        <td>{{ creation_date }}</td>
         <td>
-          <a href="/users/1/update/">Изменить</a>
+          <a href="/users/1/update/">Сhange</a>
           <br>
-          <a href="/users/1/delete/">Удалить</a>
+          <a href="/users/1/delete/">Delete</a>
         </td>
       </tr>
     
