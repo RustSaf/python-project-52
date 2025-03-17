@@ -1,10 +1,17 @@
 #from django.http import HttpResponse
 from django.shortcuts import render
-from django.shortcuts import redirect
-from django.urls import reverse
-##from django.views import View
+# from django.shortcuts import redirect
+# from django.urls import reverse
+# from django.views import View
 from django.views.generic.base import TemplateView
 from django.views.decorators.cache import never_cache
+from django.utils.translation import gettext_lazy as _
+# import gettext
+
+# gettext.bindtextdomain("messages", "locales")
+# gettext.textdomain("messages")
+
+# _ = gettext.gettext
 
 
 ##def index(request):
@@ -28,15 +35,15 @@ class IndexView(TemplateView):
 
 @never_cache
 def users_view(request):
-    return render(request, 'users.html', context={'name': 'Users'})
+    return render(request, 'users.html', context={'name': _('Users')})
 
 @never_cache
 def login_view(request):
-    return render(request, 'login.html', context={'name': 'Input'})
+    return render(request, 'login.html', context={'name': _('Input')})
 
 @never_cache
 def users_create_view(request):
-    return render(request, 'create.html', context={'name': 'Registration'})
+    return render(request, 'create.html', context={'name': _('Registration')})
 ##def article(request):
 ##    return render(request, 'articles/index.html', context={
 ##        'article': 'hexlet-django-blog',

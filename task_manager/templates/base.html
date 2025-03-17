@@ -3,13 +3,14 @@
 {% load django_bootstrap5 %}
   {% bootstrap_css %}
   {% bootstrap_javascript %}
+
 {% load i18n %}
 {% get_current_language as LANGUAGE_CODE %}
 
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Task Manager Hexlet</title>
+    <title>{% translate 'Task Manager Hexlet' %}</title>
   </head>
 
   <body class="d-flex flex-column min-vh-100">
@@ -17,24 +18,24 @@
 {% block header %}
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light ms-3">
-      <a class="navbar-brand" href="/">Task Manager</a>
+      <a class="navbar-brand" href="/">{% translate 'Task Manager' %}</a>
       <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarToggleExternalContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link" href="/users/">Users</a>
+            <a class="nav-link" href="/users/">{% translate 'Users' %}</a>
           </li>
           
         </ul>
         <ul class="navbar-nav">
           
             <li class="nav-item">
-              <a class="nav-link" href="/login/">Input</a>
+              <a class="nav-link" href="/login/">{% translate 'Input' %}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/users/create/">Registration</a>
+              <a class="nav-link" href="/users/create/">{% translate 'Registration' %}</a>
             </li>
           
         </ul>
@@ -57,7 +58,7 @@
 
     <footer>
       <div class="container my-5 pt-4 border-top">
-        <a target="_blank" href="https://ru.hexlet.io">Hexlet</a>
+        <a target="_blank" href="https://ru.hexlet.io">{% translate 'Hexlet' %}</a>
       </div>
     </footer>
 
