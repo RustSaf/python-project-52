@@ -26,7 +26,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = "django-insecure-)tf#bsmo_ifgge#5ceyladjqyk98f4)p#@(g+etgd74wk#@nz&"
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
@@ -34,7 +33,6 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # DEBUG = True
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-# DEBUG = False
 
 ALLOWED_HOSTS = [
     "python-project-52-y53r.onrender.com",
@@ -52,10 +50,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-#    "django-bootstrap5",
     "task_manager",
+    "task_manager.users",
     "django_bootstrap5",
-#    "hexlet_django_blog.article",
 ]
 
 MIDDLEWARE = [
@@ -156,14 +153,5 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 WHITENOISE_MANIFEST_STRICT = False
 
-
-# if DEBUG:
-#     STATICFILES_DIRS=['staticfiles']
-#     STATIC_ROOT = None
-# else:
-#     STATICFILES_DIRS=[]
-#     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
-

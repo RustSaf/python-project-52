@@ -1,0 +1,35 @@
+
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block context %}
+      
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>{% translate 'ID' %}</th>
+      <th>{% translate 'Username' %}</th>
+      <th>{% translate 'Full name' %}</th>
+      <th>{% translate 'Creation date' %}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    
+      <tr>
+        <td>{{ id }}</td>
+        <td>{{ username }}</td>
+        <td>{{ fullname }}</td>
+        <td>{{ creation_date }}</td>
+        <td>
+          <a href="/users/1/update/">{% translate 'Сhange' %}</a>
+          <br>
+          <a href="/users/1/delete/">{% translate 'Delete' %}</a>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+{% endblock %}
