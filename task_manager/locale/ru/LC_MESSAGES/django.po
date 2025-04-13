@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-17 07:01+0000\n"
+"POT-Creation-Date: 2025-03-27 17:55+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,15 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: settings.py:135
+msgid "English"
+msgstr "Английский"
+
+#: settings.py:136
+msgid "Russian"
+msgstr "Русский"
+
 #: templates/base.html:13
 msgid "Task Manager Hexlet"
 msgstr "Менеджер задач Хекслет"
@@ -27,61 +36,21 @@ msgstr "Менеджер задач Хекслет"
 msgid "Task Manager"
 msgstr "Менеджер задач"
 
-#: templates/base.html:28 views.py:38
+#: templates/base.html:28 users/views.py:31
 msgid "Users"
 msgstr "Пользователи"
 
-#: templates/base.html:35 templates/login.html:16 views.py:42
+#: templates/base.html:35 templates/login.html:16 views.py:28
 msgid "Input"
 msgstr "Вход"
 
-#: templates/base.html:38 views.py:46
+#: templates/base.html:38 users/views.py:76 users/views.py:99
 msgid "Registration"
 msgstr "Регистрация"
 
-#: templates/base.html:61
+#: templates/base.html:67
 msgid "Hexlet"
 msgstr "Хекслет"
-
-#: templates/create.html:11 templates/create.html:12
-msgid "Name"
-msgstr "Имя"
-
-#: templates/create.html:15 templates/create.html:16
-msgid "Surname"
-msgstr "Фамилия"
-
-#: templates/create.html:19 templates/create.html:20 templates/login.html:11
-#: templates/login.html:12 templates/users.html:12
-msgid "Username"
-msgstr "Имя пользователя"
-
-#: templates/create.html:21
-msgid ""
-"Required field. No more than 150 characters. Letters, numbers and symbols "
-"only @/./+/-/_."
-msgstr "Обязательное поле. Не более 150 символов. Буквы, цифры и символы только @/./+/-/_."
-
-#: templates/create.html:24 templates/create.html:25 templates/login.html:14
-#: templates/login.html:15
-msgid "Password"
-msgstr "Пароль"
-
-#: templates/create.html:28
-msgid "Your password must be at least 3 characters long."
-msgstr "Ваш пароль должен содержать не менее 3 символов."
-
-#: templates/create.html:33 templates/create.html:34
-msgid "Password confirmation"
-msgstr "Подтверждение пароля"
-
-#: templates/create.html:35
-msgid "To confirm, please enter the password again."
-msgstr "Для подтверждения ввода, пожалуйста, введите пароль ещё раз."
-
-#: templates/create.html:37
-msgid "Register"
-msgstr "Регистрация"
 
 #: templates/index.html:11
 msgid "Hello from Hexlet!"
@@ -95,22 +64,115 @@ msgstr "Практические курсы программирования"
 msgid "Find out more"
 msgstr "Узнать больше"
 
-#: templates/users.html:11
+#: templates/login.html:11 templates/login.html:12
+#: templates/users/create.html:47 templates/users/create.html:106
+#: templates/users/create.html:107 templates/users/index.html:12
+#: templates/users_OLD.html:12 users/forms.py:35 users/forms.py:41
+#: users/models.py:11
+msgid "Username"
+msgstr "Имя пользователя"
+
+#: templates/login.html:14 templates/login.html:15
+#: templates/users/create.html:64 templates/users/create.html:111
+#: templates/users/create.html:112 users/forms.py:48 users/forms.py:54
+#: users/models.py:12
+msgid "Password"
+msgstr "Пароль"
+
+#: templates/users/create.html:27 templates/users/create.html:98
+#: templates/users/create.html:99 users/forms.py:19 users/models.py:9
+msgid "Name"
+msgstr "Имя"
+
+#: templates/users/create.html:37 templates/users/create.html:102
+#: templates/users/create.html:103 users/forms.py:30 users/models.py:10
+msgid "Surname"
+msgstr "Фамилия"
+
+#: templates/users/create.html:61 templates/users/create.html:108
+#: users/forms.py:36
+msgid ""
+"Required field. No more than 150 characters. Letters, numbers and symbols "
+"only @/./+/-/_."
+msgstr ""
+"Обязательное поле. Не более 150 символов. Буквы, цифры и символы только @/./"
+"+/-/_."
+
+#: templates/users/create.html:73 templates/users/create.html:115
+#: users/forms.py:49
+msgid "Your password must be at least 3 characters long."
+msgstr "Ваш пароль должен содержать не менее 3 символов."
+
+#: templates/users/create.html:79 templates/users/create.html:120
+#: templates/users/create.html:121 users/forms.py:66
+msgid "Password confirmation"
+msgstr "Подтверждение пароля"
+
+#: templates/users/create.html:86 templates/users/create.html:122
+#: users/forms.py:61
+msgid "To confirm, please enter the password again."
+msgstr "Для подтверждения ввода, пожалуйста, введите пароль ещё раз."
+
+#: templates/users/create.html:89 templates/users/create.html:124
+msgid "Register"
+msgstr "Регистрация"
+
+#: templates/users/index.html:11 templates/users_OLD.html:11
 msgid "ID"
 msgstr "Индетификатор"
 
-#: templates/users.html:13
+#: templates/users/index.html:13 templates/users_OLD.html:13
 msgid "Full name"
 msgstr "Полное имя"
 
-#: templates/users.html:14
+#: templates/users/index.html:14 templates/users_OLD.html:14 users/models.py:13
 msgid "Creation date"
 msgstr "Дата создания"
 
-#: templates/users.html:26
+#: templates/users/index.html:26 templates/users_OLD.html:26
 msgid "Сhange"
 msgstr "Изменить"
 
-#: templates/users.html:28
+#: templates/users/index.html:28 templates/users_OLD.html:28
 msgid "Delete"
 msgstr "Удалить"
+
+#: users/forms.py:16
+msgid "First name"
+msgstr "Имя"
+
+#: users/forms.py:27
+msgid "Last name"
+msgstr "Фамилия"
+
+#: users/forms.py:60
+msgid "Password confirm"
+msgstr "Подтверждение пароля"
+
+#: users/forms.py:101
+msgid "The passwords entered do not match."
+msgstr "Введенные пароли не совпадают."
+
+#: users/forms.py:117
+msgid "The password you entered is too short. It must support at least 3 characters."
+msgstr "Введенный вами пароль слишком короткий. Он должен содержать не менее 3 символов."
+
+#: users/models.py:14
+msgid "Update date"
+msgstr "Дата обновления"
+
+#: users/views.py:84
+msgid "User successfully registered"
+msgstr "Пользователь успешно зарегистрирован"
+
+#: users/forms.py:107
+msgid ""
+"Please enter a valid username. It can only contain letters, numbers and "
+"@/./+/-/_ signs."
+msgstr ""
+"Введите допустимое имя пользователя. Оно может содержать только буквы, "
+"цифры и знаки @/./+/-/_."
+
+#: users/forms.py:91
+msgid "A user with this name already exists."
+msgstr "Пользователь с таким именем уже существует."

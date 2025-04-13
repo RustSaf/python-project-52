@@ -1,0 +1,18 @@
+<form action="{% url 'users:user_update' pk=user_id' %}" method="post">
+  {% csrf_token %}
+  {% for field in form %}
+  <div class="mb-3">
+    <label class="form-label" for="{{ field.id }}">{% translate field.label %}</label>
+    {{ field }}
+    {% for error in field.errors %}
+    <div class="invalid-feedback">
+      {{error}}
+    </div>
+    {% endfor %}
+    <div class="form-text">
+    {{field.help_text}}
+    </div>  
+  </div>  
+  {% endfor %}
+  <input class="btn btn-primary" type="submit" value="{% translate 'Change' %}" />
+</form>

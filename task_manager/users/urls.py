@@ -1,7 +1,6 @@
 from django.urls import path
 
-# from .views import IndexArticleView
-from .views import *  # noqa: F403
+from .views import *
 
 
 app_name = "users"
@@ -12,23 +11,27 @@ urlpatterns = [
 #    ),
     path('',
         IndexView.as_view(),
-        name='user_index'
+        name='user_index',
     ),
+#    path('auth/',
+#        IndexAuthView.as_view(),
+#        name='user_index_auth',
+#    ),
     path('<int:pk>/update/',
-        UserFormEditView.as_view(),
-        name='user_update'
+        UserEditView.as_view(),
+        name='user_update',
     ),
     path('<int:pk>/delete/',
-        UserFormDeleteView.as_view(),
+        UserDeleteView.as_view(),
         name='user_delete'),
 #    path('<int:id>/',
 #         ArticleView.as_view(),
 #         name='article_detail'
 #    ),
     path('create/',
-        UserFormCreateView.as_view(),
-        name='user_create'
-    ),   
+        UserCreateView.as_view(),
+        name='user_create',
+    ),
 #    path('',
 #        LogoutView.as_view(),
 #        name='logout'
