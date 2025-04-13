@@ -1,0 +1,14 @@
+{% extends "index.html" %}
+
+{% load i18n %}
+
+
+{% block context %}
+
+<p>Вы уверены, что хотите удалить {{ user.first_name }} {{ user.last_name }}?</p>
+<form method="post">
+{% csrf_token %}
+  <input class="btn btn-danger" type="submit" value="{% translate 'Yes, delete' %}">
+</form>
+
+{% endblock %}

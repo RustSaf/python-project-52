@@ -1,4 +1,11 @@
-<form action="{% url 'users:user_update' pk=user_id' %}" method="post">
+{% extends "index.html" %}
+
+{% load i18n %}
+
+
+{% block context %}
+
+<form action="{% url 'users:user_update' pk=user_id %}" method="post">
   {% csrf_token %}
   {% for field in form %}
   <div class="mb-3">
@@ -16,3 +23,5 @@
   {% endfor %}
   <input class="btn btn-primary" type="submit" value="{% translate 'Change' %}" />
 </form>
+
+{% endblock %}

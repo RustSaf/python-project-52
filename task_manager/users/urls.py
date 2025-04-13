@@ -18,7 +18,7 @@ urlpatterns = [
 #        name='user_index_auth',
 #    ),
     path('<int:pk>/update/',
-        UserEditView.as_view(),
+        UserUpdateView.as_view(),
         name='user_update',
     ),
     path('<int:pk>/delete/',

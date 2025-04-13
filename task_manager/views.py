@@ -34,13 +34,20 @@ class LoginUserView(LoginView):
     template_name = 'login.html'
     success_url = reverse_lazy('index')
     extra_context = {'name': _('Entrance'),}
-
+#You are not logged in! Please sign in.
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         if form.is_valid():
+
+#            username = form.cleaned_data['username']
+#            password = form.cleaned_data['password']
+#            user = authenticate(username=username, password=password)
             messages.success(request, _('You are logged in'), extra_tags='alert alert-success')
             return self.form_valid(form)
         else:
+            form.fields['username'].widget.attrs.update({'class': 'form-control is-invalid'})
+            form.fields['password'].widget.attrs.update({'class': 'form-control is-invalid'})
+#            messages.error(request, 'alert alert-danger')
             return self.form_invalid(form)
 
 

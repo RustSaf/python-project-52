@@ -6,11 +6,13 @@ from django.contrib.auth import get_user_model
 # from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 import re
+#from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from .models import Users
 
 
 class UserForm(ModelForm):
+#class UserForm(UserCreationForm):
 
     first_name = forms.CharField(
         required=True,
@@ -127,6 +129,53 @@ class UserForm(ModelForm):
             ]
 
 
+class UserUpdateForm(UserForm):
+
+    def clean(self):
+        cleaned_data = super().clean()
+        first_name = cleaned_data.get('first_name')
+        last_name = cleaned_data.get('last_name')
+        username = cleaned_data.get('username')
+        password = cleaned_data.get('password')
+        password_confirm = cleaned_data.get('password_confirm')
+#        id = cleaned_data.get('')
+        
+        if first_name:
+            self.fields['first_name'].widget.attrs.update({'class': 'form-control is-valid'})
+        
+        if last_name:
+            self.fields['last_name'].widget.attrs.update({'class': 'form-control is-valid'})
+
+        if username:
+            self.fields['username'].widget.attrs.update({'class':'form-control is-valid'})
+
+#        if Users.objects.get(username=username):
+#            self.fields['username'].widget.attrs.update({'class':'form-control is-invalid'})
+#            self.add_error('username', _("A user with this name already exists."))
+#        else:
+#            self.fields['username'].widget.attrs.update({'class':'form-control is-valid'})
+
+#        pattern = re.compile(r'[\w.@+-]{1,150}/g')
+#        if not pattern.match(username):
+#            self.fields['username'].widget.attrs.update({'class': 'form-control is-invalid'})
+#            self.add_error('username', _("Please enter a valid username. It can only contain letters, numbers and @/./+/-/_ signs."))
+#        else:
+#            self.fields['username'].widget.attrs.update({'class': 'form-control is-valid'})
+        if password != password_confirm:
+            self.fields['password_confirm'].widget.attrs.update({'class': 'form-control is-invalid'})
+            self.add_error('password_confirm', _("The passwords entered do not match."))
+        else:
+            self.fields['password_confirm'].widget.attrs.update({'class': 'form-control is-valid'})
+
+        if len(password) < 3:
+            self.fields['password'].widget.attrs.update({'class': 'form-control is-invalid'})
+            self.add_error('password', _("The password you entered is too short. It must support at least 3 characters."))
+        else:
+            self.fields['password'].widget.attrs.update({'class': 'form-control is-valid'})
+
+        return cleaned_data
+
+
 class LoginUserForm(AuthenticationForm):
 
     username = forms.CharField(
@@ -151,7 +200,7 @@ class LoginUserForm(AuthenticationForm):
         }))
     
     class Meta:
-        model = get_user_model()
+        model = Users
         fields = ['username', 'password']
     
 #    def __init__(self, *args, **kwargs):

@@ -10,8 +10,9 @@ from django.contrib import messages
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
+#from django.contrib.auth.hashers import make_password
 
-from task_manager.users.forms import UserForm
+from task_manager.users.forms import *
 
 # from django.http import Http404
 from .models import Users
@@ -78,41 +79,41 @@ class IndexView(View):
 ##         except Exception:
 ##             raise Http404()
 
-#LoginRequiredMixin
-class UserCreateView(CreateView):
 
-    form_class = UserForm
-    template_name = 'users/create.html'
-    success_url = reverse_lazy('login')
-    extra_context = {'name': _('Registration'),}
-    
-    def post(self, request, *args, **kwargs):
-        self.object = None
-        messages.success(request, _('User successfully registered'), extra_tags='alert alert-success')
-        return super().post(request, *args, **kwargs)
-    
-#    def get(self, request, *args, **kwargs):
-#        form = UserForm()  # Создаем экземпляр нашей формы
-#        # Передаем нашу форму в контексте 
-#        return render(request, 'users/create.html', context={
-#            'name': _('Registration'),
-#            'form': form,
-#            })  
+#LoginRequiredMixin
+class UserCreateView(View):
+#    form_class = UserForm
+#   template_name = 'users/create.html'
+#    success_url = reverse_lazy('login')
+#    extra_context = {'name': _('Registration'),}
     
 #    def post(self, request, *args, **kwargs):
-#        form = UserForm(request.POST)  # Получаем данные формы из запроса
-#        if form.is_valid():  # Проверяем данные формы на корректность
-#            form.clean()
-#            form.set_password(form.password)
-#            form.save()  # Сохраняем форму
-#            messages.success(request, _("User successfully registered"))
-#            return redirect('login')
-
-#        return render(request, 'users/create.html', context={
-#            'name': _('Registration'),
-#            'form': form,
-#            })
-# 
+#        self.object = None
+#        messages.success(request, _('User successfully registered'), extra_tags='alert alert-success')
+#        return super().post(request, *args, **kwargs)
+    
+    def get(self, request, *args, **kwargs):
+        form = UserForm()  # Создаем экземпляр нашей формы
+        # Передаем нашу форму в контексте 
+        return render(request, 'users/create.html', context={
+            'name': _('Registration'),
+            'form': form,
+            })
+      
+    def post(self, request, *args, **kwargs):
+        form = UserForm(request.POST)  # Получаем данные формы из запроса
+        if form.is_valid():  # Проверяем данные формы на корректность
+            form.clean()
+#            self.request.user.set_password(form.password)
+#            form.make_password(form.password)
+            form.save()  # Сохраняем форму
+            messages.success(request, _('User successfully registered'), extra_tags='alert alert-success')
+            return redirect('/login')
+        return render(request, 'users/create.html', context={
+            'name': _('Registration'),
+            'form': form,
+            })
+ 
 # 
 #       
 #        messages.error(request, _("A user with this name already exists."))
@@ -127,32 +128,39 @@ class UserCreateView(CreateView):
 #        form.widget.attrs.update({'class':'form-control is-invalid'})
 
 
+class UserUpdateView(LoginRequiredMixin, View):
 
-
-class UserEditView(View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(request, _('You are not logged in! Please sign in.'), extra_tags='alert alert-danger')
+            return self.handle_no_permission()
+        return super(LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        user_id = kwargs.get('id')
-        user = Users.objects.get(id=user_id)
-        form = UserForm(instance=user)
- # У вас нет прав для изменения другого пользователя.(красное)        
-        return render(
-            request, 'users/update.html', context={
-                'name': _('Change user'),
-                'form': form,
-                'user_id': user_id,
-                })
-
-    
+        user_id = kwargs.get('pk')   
+        if user_id == self.request.user.id:
+            user = Users.objects.get(id=user_id)
+            form = UserUpdateForm(instance=user)       
+            return render(
+                request, 'users/update.html', context={
+                    'name': _('Change user'),
+                    'form': form,
+                    'user_id': user_id,
+                    })
+# У вас нет прав для изменения другого пользователя.(красное)         
+        else:
+            messages.error(request, _('You do not have permission to modify another user.'), extra_tags='alert alert-danger')
+            return redirect('/users')
+  
     def post(self, request, *args, **kwargs):
-        user_id = kwargs.get('id')
+        user_id = kwargs.get('pk')
         user = Users.objects.get(id=user_id)
-        form = UserForm(request.POST, instance=user)
+        form = UserUpdateForm(request.POST, instance=user)
         if form.is_valid():
             form.clean()
             form.save()
-            messages.success(request, _("User successfully changed"))
-            return redirect('users:index')
+            messages.success(request, _('User successfully changed'), extra_tags='alert alert-success')
+            return redirect('/users')
 
         return render(
             request, 'users/update.html', {
@@ -162,19 +170,35 @@ class UserEditView(View):
                 })
 
 
+class UserDeleteView(LoginRequiredMixin, View):
 
-class UserDeleteView(View):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(request, _('You are not logged in! Please sign in.'), extra_tags='alert alert-danger')
+            return self.handle_no_permission()
+        return super(LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
 # У вас нет прав для изменения другого пользователя.(красное)
-        pass
+        user_id = kwargs.get('pk') 
+        if user_id == self.request.user.id:
+            user = Users.objects.get(id=user_id)
+            return render(request, 'users/delete.html', context={
+                'name': _('Delete user'),
+                'user': user,
+            })
+        # У вас нет прав для изменения другого пользователя.(красное)         
+        else:
+            messages.error(request, _('You do not have permission to modify another user.'), extra_tags='alert alert-danger')
+            return redirect('/users')
 
     def post(self, request, *args, **kwargs):
-        user_id = kwargs.get('id')
+        user_id = kwargs.get('pk')
         user = Users.objects.get(id=user_id)
         if user:
             user.delete()
-            return redirect('users:index')
+            messages.success(request, _('User deleted successfully'), extra_tags='alert alert-success')            
+            return redirect('/users')
 
 
 # class CommentFormCreateView(View):
