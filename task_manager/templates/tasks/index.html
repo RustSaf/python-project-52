@@ -3,4 +3,40 @@
 {% load i18n %}
 
 {% block context %}
+
+<a class="btn btn-primary mb-3" href="/tasks/create/" role="button">{% translate 'Create a task' %}</a>
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>{% translate 'ID' %}</th>
+        <th>{% translate 'Name' %}</th>
+        <th>{% translate 'Status' %}</th>
+        <th>{% translate 'Author' %}</th>
+        <th>{% translate 'Executor' %}</th>
+        <th>{% translate 'Creation date' %}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if tasks %}
+      {% for task in tasks %}    
+        <tr>
+          <td>{{ task.id }}</td>
+          <td>{{ task.name }}</td>
+          <td>{{ task.status }}</td>
+          <td>{{ task.author }}</td>
+          <td>{{ task.executor }}</td>
+          <td>{{ task.created_at }}</td>
+          <td>
+            <a href="/tasks/{{ task.id }}/update/">{% translate 'Сhange' %}</a>
+            <br>
+            <a href="/tasks/{{ task.id }}/delete/">{% translate 'Delete' %}</a>
+          </td>
+        </tr>
+      {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+  
 {% endblock %}

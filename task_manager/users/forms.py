@@ -2,6 +2,7 @@ from urllib import request
 from django import forms  # type: ignore # Импортируем формы Django
 from django.forms import ModelForm  # type: ignore
 from django.contrib.auth.forms import AuthenticationForm
+# from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 # from django.contrib import messages
 from django.utils.translation import gettext_lazy as _

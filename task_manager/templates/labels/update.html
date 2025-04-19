@@ -1,0 +1,20 @@
+{% extends "index.html" %}
+
+{% load i18n %}
+
+
+{% block context %}
+
+<form action="{# url 'labels:label_update' pk=form.id #}" method="post">
+  {% csrf_token %}
+  {% for field in form %}
+    <div class="mb-3">
+      <label class="form-label" for="{{ field.id }}">{% translate field.label %}</label>
+      {{ field }}
+    </div>
+  {% endfor %}
+
+  <input class="btn btn-primary" type="submit" value="{% translate 'Update' %}" />
+</form>
+
+{% endblock %}

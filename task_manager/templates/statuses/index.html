@@ -3,4 +3,34 @@
 {% load i18n %}
 
 {% block context %}
+
+<a class="btn btn-primary mb-3" href="/statuses/create/" role="button">{% translate 'Create a status' %}</a>
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>{% translate 'ID' %}</th>
+        <th>{% translate 'Name' %}</th>
+        <th>{% translate 'Creation date' %}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if statuses %}
+      {% for status in statuses %}    
+        <tr>
+          <td>{{ status.id }}</td>
+          <td>{{ status.name }}</td>
+          <td>{{ status.created_at }}</td>
+          <td>
+            <a href="/statuses/{{ status.id }}/update/">{% translate 'Сhange' %}</a>
+            <br>
+            <a href="/statuses/{{ status.id }}/delete/">{% translate 'Delete' %}</a>
+          </td>
+        </tr>
+      {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+  
 {% endblock %}

@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 #from django.contrib.auth.hashers import make_password
 
-from task_manager.users.forms import *
+from .forms import *
 
 # from django.http import Http404
 from .models import Users
@@ -104,7 +104,7 @@ class UserCreateView(View):
         form = UserForm(request.POST)  # Получаем данные формы из запроса
         if form.is_valid():  # Проверяем данные формы на корректность
             form.clean()
-#            self.request.user.set_password(form.password)
+#            form.set_password(form.password)
 #            form.make_password(form.password)
             form.save()  # Сохраняем форму
             messages.success(request, _('User successfully registered'), extra_tags='alert alert-success')
