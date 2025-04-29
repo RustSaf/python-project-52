@@ -119,21 +119,23 @@ DATABASES = {
 AUTH_USER_MODEL='users.Users'
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
+#    {
+#        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+#    },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        'OPTIONS': {
+            'min_length': 3,
+        },
     },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+#    {
+#        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+#    },
+#    {
+#        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+#    },
 ]
 
-#AUTH_USER_MODEL = 'task_manager.Users'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

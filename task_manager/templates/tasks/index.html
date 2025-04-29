@@ -6,6 +6,67 @@
 
 <a class="btn btn-primary mb-3" href="/tasks/create/" role="button">{% translate 'Create a task' %}</a>
 
+<div class="card mb-3">
+    <div class="card-body bg-light">
+      <form class="form-inline center" method="get">
+        <div class="mb-3">
+            <label class="form-label" for="id_status">{% translate 'Statuses' %}</label>
+            
+            <select name="status" class="form-select mr-3 ml-2 {{ valid }}" id="id_status">
+<!--                <option value="{{ stat }}" selected>{{ stat }}</option>   -->
+                <option value="" selected>---------</option>
+                {% if statuses %}
+                {% for status in statuses %}
+                <option value="{{ status.id }}">{{ status.name }}</option> 
+                {% endfor %}
+                {% else %}
+                
+                {% endif %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="id_executor">{% translate 'Executors' %}</label>
+            <select name="executor" class="form-select mr-3 ml-2 {{ valid }}" id="id_executor">
+                <option value="" selected>---------</option>
+                {% for executor in executors %}
+                <option value="{{ executor.id }}">{{ executor.username }}</option> 
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="id_label">{% translate 'Labels' %}</label>
+            <select name="label" class="form-select mr-3 ml-2 {{ valid }}" id="id_label">
+                <option value="" selected>---------</option>
+                {% for label in labels %}
+                <option value="{{ label.id }}">{{ label.name }}</option> 
+                {% endfor %}
+            </select>
+        </div>
+<!--        <div class="mb-3">
+            <label class="form-label" for="id_executor">{% translate 'Executor' %}</label>
+            <select name="executor" class="form-select mr-3 ml-2 is-valid" id="id_executor">
+                <option value="" selected>---------</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="id_label">{% translate 'Label' %}</label>
+            <select name="label" class="form-select mr-3 ml-2 is-valid" id="id_label">
+                <option value="" selected>---------</option>
+            </select>
+        </div>
+    -->
+        <div class="mb-3">
+        <div class="form-check">
+            <input type="checkbox" name="self_tasks" class="form-check-input mr-3 {{ valid }}" id="id_self_tasks">
+            {{ self_tasks }}
+            <label class="form-check-label" for="id_self_tasks">{% translate 'Only your tasks' %}</label>   
+        </div>
+        </div>
+        <input class="btn btn-primary" type="submit" value="{% translate 'Show' %}">
+      </form>
+    </div>
+</div>
+
 <table class="table table-striped">
     <thead>
       <tr>

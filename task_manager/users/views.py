@@ -7,7 +7,7 @@ from django.views import View
 from django import forms
 from django.contrib import messages
 # from django.contrib.messages import get_messages
-from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 #from django.contrib.auth.hashers import make_password
@@ -27,14 +27,22 @@ from .models import Users
 #         raise Http404()
 
 
-class IndexView(View):
+class IndexView(ListView):
 
-    def get(self, request, *args, **kwargs):
-        users = Users.objects.all()[:]
-        return render(request, 'users/index.html', context={
-            'name': _('Users'),
-            'users': users,
-        })
+    model = Users
+    template_name = 'users/index.html'
+    success_url = reverse_lazy('users:user_index')
+    users = Users.objects.all()
+    extra_context = {
+        'name': _('Users'),
+        'users': users,
+        }
+#    def get(self, request, *args, **kwargs):
+#        users = Users.objects.all()[:]
+#        return render(request, 'users/index.html', context={
+#            'name': _('Users'),
+#            'users': users,
+#        })
 
 
 #class IndexAuthView(View):
@@ -81,32 +89,37 @@ class IndexView(View):
 
 
 #LoginRequiredMixin
-class UserCreateView(View):
-#    form_class = UserForm
-#   template_name = 'users/create.html'
-#    success_url = reverse_lazy('login')
-#    extra_context = {'name': _('Registration'),}
-    
+class UserCreateView(CreateView):
+
+    form_class = UserForm
+    template_name = 'users/create.html'
+    success_url = reverse_lazy('login')
+    extra_context = {'name': _('Registration'),}   
 #    def post(self, request, *args, **kwargs):
 #        self.object = None
 #        messages.success(request, _('User successfully registered'), extra_tags='alert alert-success')
 #        return super().post(request, *args, **kwargs)
     
-    def get(self, request, *args, **kwargs):
-        form = UserForm()  # Создаем экземпляр нашей формы
-        # Передаем нашу форму в контексте 
-        return render(request, 'users/create.html', context={
-            'name': _('Registration'),
-            'form': form,
-            })
+#    def get(self, request, *args, **kwargs):
+#        form = UserForm()  # Создаем экземпляр нашей формы
+#        # Передаем нашу форму в контексте 
+#        return render(request, 'users/create.html', context={
+#            'name': _('Registration'),
+#            'form': form,
+#            })
       
     def post(self, request, *args, **kwargs):
         form = UserForm(request.POST)  # Получаем данные формы из запроса
         if form.is_valid():  # Проверяем данные формы на корректность
             form.clean()
-#            form.set_password(form.password)
 #            form.make_password(form.password)
+#            form.set_password(form.password)
             form.save()  # Сохраняем форму
+            username = form.cleaned_data.get('username', '')
+            myuser = Users.objects.get(username=username)
+            password = form.cleaned_data.get('password', '')
+            myuser.set_password(password)
+            myuser.save()
             messages.success(request, _('User successfully registered'), extra_tags='alert alert-success')
             return redirect('/login')
         return render(request, 'users/create.html', context={
@@ -155,12 +168,19 @@ class UserUpdateView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         user_id = kwargs.get('pk')
         user = Users.objects.get(id=user_id)
-        form = UserUpdateForm(request.POST, instance=user)
+        form = UserUpdateForm(request, instance=user)
         if form.is_valid():
             form.clean()
+#            form.save()
+#            username = form.cleaned_data.get('username', '')
+#            myuser = Users.objects.get(username=username)
+            password = form.cleaned_data.get('password', '')
+            user.set_password(password)
+            user.save()
             form.save()
             messages.success(request, _('User successfully changed'), extra_tags='alert alert-success')
             return redirect('/users')
+#            return reverse_lazy('users:user_index')
 
         return render(
             request, 'users/update.html', {

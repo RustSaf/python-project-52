@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, PermissionsMixin
+# from django.core.validators import RegexValidator                     
 # from django.contrib.auth.models import BaseUserManager
 from django.utils.translation import gettext_lazy as _
 #from task_manager.tasks.models import Tasks
@@ -9,9 +10,21 @@ from django.utils.translation import gettext_lazy as _
 
 class Users(AbstractUser, PermissionsMixin):
     
+#    id = models.BigIntegerField(primary_key=True, auto_created=True)
     first_name = models.TextField(max_length=150, verbose_name=_('Name'))
     last_name = models.TextField(max_length=150, verbose_name=_('Surname'))
-    username = models.TextField(max_length=150, unique=True, verbose_name=_('Username'))
+    username = models.TextField(
+        max_length=150,
+        unique=True,
+        verbose_name=_('Username'),
+#        validators=[
+#            RegexValidator(
+#                regex=r'^[A-Z]{3}\d{3}$',
+#                message="Enter a valid registration number in the format ABC123.",
+#                code="invalid_registration",
+#                ),
+#            ],
+        )
 #    executor = models.ForeignKey(Tasks, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Executor")
     password = models.TextField(max_length=20, verbose_name=_('Password'))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Creation date'))

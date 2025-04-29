@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View, ListView
 from django.contrib.auth import logout
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -16,9 +16,9 @@ from .users.models import Users
 
 class IndexView(TemplateView):
 
-#    template_name = "index.html"
-    def index_view(request):
-        return render(request, 'index.html')
+    template_name = "index.html"
+#    def index_view(request):
+#        return render(request, 'index.html')
 
 
 #class IndexAuthView(TemplateView):

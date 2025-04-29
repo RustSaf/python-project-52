@@ -54,7 +54,7 @@
       <h1 class="my-4">
 
 {% for message in messages %}
-<div class="alert alert-success" role="alert">
+<div class="{{ message.extra_tags }}" role="alert">
   <h5>{{ message }}</h5>
 </div>
 {% endfor %}

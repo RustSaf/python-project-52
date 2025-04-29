@@ -13,7 +13,7 @@ from .models import Labels
 class IndexView(View):
 
     def get(self, request, *args, **kwargs):
-        labels = Labels.objects.all()[:]
+        labels = Labels.objects.all()
         return render(request, 'labels/index.html', context={
             'name': _('Labels'),
             'labels': labels,
@@ -60,7 +60,7 @@ class LabelUpdateView(UpdateView):
 
 class LabelDeleteView(DeleteView):
     
-    model = Labels
+#    model = Labels
     template_name = 'labels/delete.html'
     success_url = reverse_lazy('labels:label_index')
 

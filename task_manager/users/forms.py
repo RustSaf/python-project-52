@@ -2,10 +2,13 @@ from urllib import request
 from django import forms  # type: ignore # Импортируем формы Django
 from django.forms import ModelForm  # type: ignore
 from django.contrib.auth.forms import AuthenticationForm
+from django.db.utils import IntegrityError
+#import pymysql
 # from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 # from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
+# from django.core.validators import RegexValidator
 import re
 #from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
@@ -88,27 +91,28 @@ class UserForm(ModelForm):
         
         if last_name:
             self.fields['last_name'].widget.attrs.update({'class': 'form-control is-valid'})
-
+        
+        pattern = re.compile(r'^[\w@,+-]{1,150}$')
         user_exists = username is not None and Users.objects.filter(username=username).exists()
-        if user_exists:
+        if not pattern.match(username):
+            self.fields['username'].widget.attrs.update({'class': 'form-control is-invalid'})
+            self.add_error('username', _("Please enter a valid username. It can only contain letters, numbers and @/./+/-/_ signs."))
+        elif user_exists:
             self.fields['username'].widget.attrs.update({'class':'form-control is-invalid'})
             self.add_error('username', _("A user with this name already exists."))
         else:
-            self.fields['username'].widget.attrs.update({'class':'form-control is-valid'})
-
-
+            self.fields['username'].widget.attrs.update({'class': 'form-control is-valid'})
+        
+#        else:
+#            self.fields['username'].widget.attrs.update({'class':'form-control is-valid'})
 #        if Users.objects.get(username=username):
 #            self.fields['username'].widget.attrs.update({'class':'form-control is-invalid'})
 #            self.add_error('username', _("A user with this name already exists."))
 #        else:
 #            self.fields['username'].widget.attrs.update({'class':'form-control is-valid'})
 
-#        pattern = re.compile(r'[\w.@+-]{1,150}/g')
-#        if not pattern.match(username):
-#            self.fields['username'].widget.attrs.update({'class': 'form-control is-invalid'})
-#            self.add_error('username', _("Please enter a valid username. It can only contain letters, numbers and @/./+/-/_ signs."))
-#        else:
-#            self.fields['username'].widget.attrs.update({'class': 'form-control is-valid'})
+        
+
         if password != password_confirm:
             self.fields['password_confirm'].widget.attrs.update({'class': 'form-control is-invalid'})
             self.add_error('password_confirm', _("The passwords entered do not match."))
@@ -121,10 +125,12 @@ class UserForm(ModelForm):
         else:
             self.fields['password'].widget.attrs.update({'class': 'form-control is-valid'})
 
+#        Users.set_password(password)
         return cleaned_data
         
     class Meta:
         model = Users
+#        model = get_user_model
         fields = [
             'id', 'first_name', 'last_name', 'username', 'password', 'password_confirm'
             ]
@@ -133,13 +139,14 @@ class UserForm(ModelForm):
 class UserUpdateForm(UserForm):
 
     def clean(self):
-        cleaned_data = super().clean()
-        first_name = cleaned_data.get('first_name')
-        last_name = cleaned_data.get('last_name')
-        username = cleaned_data.get('username')
-        password = cleaned_data.get('password')
-        password_confirm = cleaned_data.get('password_confirm')
-#        id = cleaned_data.get('')
+        #cleaned_data = super().clean()
+        id = self.cleaned_data.get('id')
+        first_name = self.cleaned_data.get('first_name')
+        last_name = self.cleaned_data.get('last_name')
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        password_confirm = self.cleaned_data.get('password_confirm')
+        
         
         if first_name:
             self.fields['first_name'].widget.attrs.update({'class': 'form-control is-valid'})
@@ -147,8 +154,8 @@ class UserUpdateForm(UserForm):
         if last_name:
             self.fields['last_name'].widget.attrs.update({'class': 'form-control is-valid'})
 
-        if username:
-            self.fields['username'].widget.attrs.update({'class':'form-control is-valid'})
+#        if username:
+#            self.fields['username'].widget.attrs.update({'class':'form-control is-valid'})
 
 #        if Users.objects.get(username=username):
 #            self.fields['username'].widget.attrs.update({'class':'form-control is-invalid'})
@@ -156,12 +163,24 @@ class UserUpdateForm(UserForm):
 #        else:
 #            self.fields['username'].widget.attrs.update({'class':'form-control is-valid'})
 
-#        pattern = re.compile(r'[\w.@+-]{1,150}/g')
-#        if not pattern.match(username):
-#            self.fields['username'].widget.attrs.update({'class': 'form-control is-invalid'})
-#            self.add_error('username', _("Please enter a valid username. It can only contain letters, numbers and @/./+/-/_ signs."))
-#        else:
-#            self.fields['username'].widget.attrs.update({'class': 'form-control is-valid'})
+        try:
+            pattern = re.compile(r'^[\w@,+-]{1,150}$')
+#            user_exists = username is not None and not Users.objects.filter(username=username).filter(id=id).exists
+            if not pattern.match(username):
+                self.fields['username'].widget.attrs.update({'class': 'form-control is-invalid'})
+                self.add_error('username', _("Please enter a valid username. It can only contain letters, numbers and @/./+/-/_ signs."))
+#        elif user_exists:
+#            self.fields['username'].widget.attrs.update({'class':'form-control is-invalid'})
+#            self.add_error('username', _("A user with this name already exists."))
+            else:
+                self.fields['username'].widget.attrs.update({'class': 'form-control is-valid'})
+        except IntegrityError():
+            self.fields['username'].widget.attrs.update({'class':'form-control is-invalid'})
+            self.add_error('username', _("A user with this name already exists."))
+        except Exception as e:
+        # Raise all other exceptions. 
+            raise e
+
         if password != password_confirm:
             self.fields['password_confirm'].widget.attrs.update({'class': 'form-control is-invalid'})
             self.add_error('password_confirm', _("The passwords entered do not match."))
@@ -174,7 +193,8 @@ class UserUpdateForm(UserForm):
         else:
             self.fields['password'].widget.attrs.update({'class': 'form-control is-valid'})
 
-        return cleaned_data
+        return self.cleaned_data
+#    cleaned_data
 
 
 class LoginUserForm(AuthenticationForm):
@@ -202,6 +222,7 @@ class LoginUserForm(AuthenticationForm):
     
     class Meta:
         model = Users
+#        model = get_user_model
         fields = ['username', 'password']
     
 #    def __init__(self, *args, **kwargs):

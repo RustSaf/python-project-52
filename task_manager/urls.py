@@ -25,7 +25,7 @@ from django.urls import reverse, reverse_lazy
 from . import views
 
 urlpatterns = [
-    path('', views.IndexView.index_view, name='index'),
+    path('', views.IndexView.as_view(), name='index'),
 #    path('auth/', views.IndexAuthView.index_view, name='index_auth'),
     path('login/', views.LoginUserView.as_view(), name='login'),
     path('logout/', views.logout_view, name='logout'), 

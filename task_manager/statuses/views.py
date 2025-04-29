@@ -13,7 +13,7 @@ from .models import Statuses
 class IndexView(View):
 
     def get(self, request, *args, **kwargs):
-        statuses = Statuses.objects.all()[:]
+        statuses = Statuses.objects.all()
         return render(request, 'statuses/index.html', context={
             'name': _('Statuses'),
             'statuses': statuses,
@@ -22,7 +22,7 @@ class IndexView(View):
 
 class StatusCreateView(CreateView):
     
-    model = Statuses
+#    model = Statuses
     form_class = StatusForm
     template_name = 'statuses/create.html'
 #    fields = [
