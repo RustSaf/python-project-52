@@ -11,35 +11,59 @@
       <form class="form-inline center" method="get">
         <div class="mb-3">
             <label class="form-label" for="id_status">{% translate 'Statuses' %}</label>
-            
             <select name="status" class="form-select mr-3 ml-2 {{ valid }}" id="id_status">
-<!--                <option value="{{ stat }}" selected>{{ stat }}</option>   -->
-                <option value="" selected>---------</option>
-                {% if statuses %}
+                {% if stat.1 %}
+                <option value="{{ stat.0 }}" selected>{{ stat.1 }}</option>
+                <option value="">---------</option>
                 {% for status in statuses %}
-                <option value="{{ status.id }}">{{ status.name }}</option> 
+                {% if status != stat.1 %}
+                <option value="{{ status.id }}">{{ status }}</option>
+                {% endif %}
                 {% endfor %}
                 {% else %}
-                
+                <option value="" selected>---------</option>
+                {% for status in statuses %}
+                <option value="{{ status.id }}">{{ status }}</option>                
+                {% endfor %}
                 {% endif %}
             </select>
         </div>
         <div class="mb-3">
             <label class="form-label" for="id_executor">{% translate 'Executors' %}</label>
             <select name="executor" class="form-select mr-3 ml-2 {{ valid }}" id="id_executor">
+                {% if exec.1 %}
+                <option value="{{ exec.0 }}" selected>{{ exec.1 }}</option>
+                <option value="">---------</option>
+                {% for executor in executors %}
+                {% if executor != exec.1 %}
+                <option value="{{ executor.id }}">{{ executor }}</option>
+                {% endif %}
+                {% endfor %}
+                {% else %}
                 <option value="" selected>---------</option>
                 {% for executor in executors %}
-                <option value="{{ executor.id }}">{{ executor.username }}</option> 
+                <option value="{{ executor.id }}">{{ executor }}</option>                
                 {% endfor %}
+                {% endif %}
             </select>
         </div>
         <div class="mb-3">
             <label class="form-label" for="id_label">{% translate 'Labels' %}</label>
             <select name="label" class="form-select mr-3 ml-2 {{ valid }}" id="id_label">
+                {% if lab.1 %}
+                <option value="{{ lab.0 }}" selected>{{ lab.1 }}</option>
+                <option value="">---------</option>
+                {% for label in labels %}
+                {% if label != lab.1 %}
+                <option value="{{ label.id }}">{{ label }}</option>
+                {% endif %}
+                {% endfor %}
+                {% else %}
                 <option value="" selected>---------</option>
                 {% for label in labels %}
-                <option value="{{ label.id }}">{{ label.name }}</option> 
+                <option value="{{ label.id }}">{{ label }}</option>                
                 {% endfor %}
+                {% endif %}
             </select>
         </div>
 <!--        <div class="mb-3">
@@ -57,7 +81,11 @@
     -->
         <div class="mb-3">
         <div class="form-check">
+            {% if checked %}
+            <input type="checkbox" name="self_tasks" class="form-check-input mr-3 {{ valid }}" checked id="id_self_tasks">
+            {% else %}
             <input type="checkbox" name="self_tasks" class="form-check-input mr-3 {{ valid }}" id="id_self_tasks">
+            {% endif %}
             {{ self_tasks }}
             <label class="form-check-label" for="id_self_tasks">{% translate 'Only your tasks' %}</label>   
         </div>

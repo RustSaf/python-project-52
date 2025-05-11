@@ -7,7 +7,7 @@
 
 <form action="{# url 'tasks:task_update' pk=form.id #}" method="post">
   {% csrf_token %}
-  {% for field in form %}
+  {% for field in form.visible_fields %}
     <div class="mb-3">
       <label class="form-label" for="{{ field.id }}">{% translate field.label %}</label>
       {{ field }}

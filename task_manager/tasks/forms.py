@@ -100,15 +100,14 @@ class TaskForm(ModelForm):
         ]
         required=True
         label = {
-            'author': _("Author"),
             'name': _("Name"),
+            'author': _("Author"),
             'discription': _("Discription"),
             'status': _("Status"),
             'executor': _("Executor"),
             'label': _("Label")
         }
         widgets = {
-            'author': forms.HiddenInput(),
             'name': forms.TextInput(attrs={
                 'name': "name",
                 'maxlength': "150",
@@ -117,6 +116,7 @@ class TaskForm(ModelForm):
                 'required': "True",
                 'id': "id_name",
             }),
+            'author': forms.HiddenInput(),
             'discription': forms.Textarea(attrs={
                 'name': "discription",
                 'cols': "40",

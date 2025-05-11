@@ -29,11 +29,11 @@ from task_manager.labels.models import Labels
 
 class Tasks(models.Model):
     
-    author = models.TextField(max_length=150, null=True, verbose_name=_('Author'))
     name = models.TextField(max_length=150, verbose_name=_('Name'))
+    author = models.TextField(max_length=150, blank=True, null=True, verbose_name=_('Author'))
     discription = models.TextField('discription', max_length=100)
     status = models.ForeignKey(Statuses, on_delete=models.PROTECT, blank=True, null=True, verbose_name=_("Status"))
-    executor = models.ForeignKey(Users, on_delete=models.PROTECT, blank=True, null=True, verbose_name=_("Executor"))
+    executor = models.ForeignKey(Users, on_delete=models.PROTECT, blank=True, null=True,  verbose_name=_("Executor"))
     label = models.ManyToManyField(Labels, blank=True, verbose_name=_("Labels"))
 #    author = models.OneToOneField(Users, on_delete=models.PROTECT, blank=True, null=True, verbose_name="Author")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Creation date'))

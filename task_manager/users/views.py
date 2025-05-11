@@ -1,8 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render  # type: ignore
 from django.urls import reverse, reverse_lazy
-
 from django.utils.translation import gettext_lazy as _
-# from django.views.decorators.cache import never_cache
 from django.views import View
 from django import forms
 from django.contrib import messages
@@ -27,22 +25,22 @@ from .models import Users
 #         raise Http404()
 
 
-class IndexView(ListView):
+class IndexView(View):
 
-    model = Users
-    template_name = 'users/index.html'
-    success_url = reverse_lazy('users:user_index')
-    users = Users.objects.all()
-    extra_context = {
-        'name': _('Users'),
-        'users': users,
-        }
-#    def get(self, request, *args, **kwargs):
-#        users = Users.objects.all()[:]
-#        return render(request, 'users/index.html', context={
-#            'name': _('Users'),
-#            'users': users,
-#        })
+#    model = Users
+#    template_name = 'users/index.html'
+#    success_url = reverse_lazy('users:user_index')
+#    users = Users.objects.all()
+#    extra_context = {
+#        'name': _('Users'),
+#        'users': users,
+#        }
+    def get(self, request, *args, **kwargs):
+        users = Users.objects.all()
+        return render(request, 'users/index.html', context={
+            'name': _('Users'),
+            'users': users,
+        })
 
 
 #class IndexAuthView(View):
@@ -91,10 +89,11 @@ class IndexView(ListView):
 #LoginRequiredMixin
 class UserCreateView(CreateView):
 
+#    model = Users
     form_class = UserForm
     template_name = 'users/create.html'
-    success_url = reverse_lazy('login')
-    extra_context = {'name': _('Registration'),}   
+#    success_url = reverse_lazy('login')
+#    extra_context = {'name': _('Registration'),}   
 #    def post(self, request, *args, **kwargs):
 #        self.object = None
 #        messages.success(request, _('User successfully registered'), extra_tags='alert alert-success')

@@ -3,15 +3,24 @@ from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.views import View
-from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
-
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+#from django.views.generic import ListView
 from .forms import *
 from .models import Labels
+from task_manager.tasks.models import Tasks
 
 
 
 class IndexView(View):
 
+#    model = Labels
+#    template_name = 'labels/index.html'
+#    success_url = reverse_lazy('labels:label_index')
+#    labels = Labels.objects.all()
+#    extra_context = {
+#        'name': _('Labels'),
+#        'labels': labels,
+#        }
     def get(self, request, *args, **kwargs):
         labels = Labels.objects.all()
         return render(request, 'labels/index.html', context={
@@ -22,12 +31,9 @@ class IndexView(View):
 
 class LabelCreateView(CreateView):
     
-    model = Labels
+#    model = Labels
     form_class = LabelForm
     template_name = 'labels/create.html'
-#    fields = [
-#            'id', 'name', 'discription', 'status', 'executor', 'label'
-#        ]
     success_url = reverse_lazy('labels:label_index')
     extra_context = {
         'name': _('Create a label'),
@@ -38,18 +44,11 @@ class LabelCreateView(CreateView):
         return super().post(request, *args, **kwargs)
 
 
-# form_class = UserForm
-#   template_name = 'users/create.html'
-#    success_url = reverse_lazy('login')
-#    extra_context = {'name': _('Registration'),}
 class LabelUpdateView(UpdateView):
     
     model = Labels
     form_class = LabelForm
     template_name = 'labels/update.html'
-#    fields = [
-#            'id', 'name', 'discription', 'status', 'executor', 'label'
-#        ]
     success_url = reverse_lazy('labels:label_index')
     extra_context = {'name': _('Change label'),}
 
@@ -60,22 +59,23 @@ class LabelUpdateView(UpdateView):
 
 class LabelDeleteView(DeleteView):
     
-#    model = Labels
-    template_name = 'labels/delete.html'
+    model = Labels
+#    template_name = 'labels/delete.html'
     success_url = reverse_lazy('labels:label_index')
 
+    def get(self, request, *args, **kwargs):
+        label_id = kwargs.get('pk') 
+        label = Labels.objects.get(id=label_id)
+        return render(request, 'labels/delete.html', context={
+            'name': _('Deleting a label'),
+            'label': label,
+        })      
+
     def post(self, request, *args, **kwargs):
-        messages.success(request, _('Label successfully removed'), extra_tags='alert alert-success')
-        return super().post(request, *args, **kwargs)
-# ID 	Имя 	Дата создания
-
-# Create a label
-# Label created successfully
-
-# Change label
-# The label has been changed successfully.
-
-# Deleting a label
-# Are you sure you want to delete {}? (все как при удалении пользователя)
-# Cannot delete label because it is in use
-# Label successfully removed
+        label_id = kwargs.get('pk') 
+        if Tasks.objects.filter(label=label_id):
+            messages.error(request, _('Cannot delete label because it is in use'), extra_tags='alert alert-danger')
+            return redirect('/labels')
+        else:
+            messages.success(request, _('Label successfully removed'), extra_tags='alert alert-success')
+            return super().post(request, *args, **kwargs)
