@@ -4,13 +4,8 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-#from django.views.generic import ListView
-#from django import forms
-#import json
 from .forms import *
 from .models import Tasks
-#from django import forms
-#from django.db import models
 from task_manager.users.models import Users
 from task_manager.statuses.models import Statuses
 from task_manager.labels.models import Labels
@@ -18,8 +13,6 @@ from task_manager.labels.models import Labels
 
 class IndexView(View):
     
-#    model = Tasks
-#    template_name = 'tasks/index.html'
     def get(self, request, *args, **kwargs):
 
         statuses = Statuses.objects.all()
@@ -62,31 +55,8 @@ class IndexView(View):
 
 class TaskCreateView(CreateView):
     
-#    model = Tasks
-#    queryset = Tasks.objects.all()
     form_class = TaskForm
     template_name = 'tasks/create.html'
-#    fields = [
-#            'id', 'author', 'name', 'discription', 'status', 'executor', 'label'
-#    ]
-#    fields = ['author']
-#    success_url = reverse_lazy('tasks:task_index')
-#    extra_context = {
-#        'name': _('Create a task'),
-#        }
-
-#    context_object_name = 'tasks'
-
-#    def get_context_data(self, **kwargs):
-#        context = super().get_context_data(**kwargs)
-#        context['tasks'] = self.context_object_name
-
-#        return context
-#    def get_success_message(self, cleaned_data):
-#        return self.success_message % dict(
-#            cleaned_data,
-#            object=self.object,
-#        )
 
     def post(self, request, *args, **kwargs):
         form = TaskForm(request.POST)  # Получаем данные формы из запроса
@@ -101,129 +71,45 @@ class TaskCreateView(CreateView):
             'form': form,
             })
 
-#    def post(self, request, *args, **kwargs):
-#        self.author = self.request.username
-#        form = TaskForm(request.POST)  # Получаем данные формы из запроса
-#        if form.is_valid():  # Проверяем данные формы на корректность    
-#            form.clean()
-#            instatce = form.save(commit=False)
-#            creator = self.request.user.username
-#            creator = Users.objects.get(username=author)
-#            form.author = 'creator'
-#            task = Tasks(request.POST)
-#            task.author = creator
-#            task.save()
-#            instance = form.save(commit=False)
-#            instance = form.save()
-#            task = Tasks(request.POST)
-#            form.author = self.request.user
-#            form.author = self.request.user.username
-#            form.save()
-#            messages.success(request, _('Task created successfully'), extra_tags='alert alert-success')
-#            return redirect('tasks:task_index')
-#            return super().post(request, *args, **kwargs)
-#        return render(request, 'tasks/create.html', context={
-#            'name': _('Create a task'),
-#            'form': form,
-#            })
 
-
-# form_class = UserForm
-#   template_name = 'users/create.html'
-#    success_url = reverse_lazy('login')
-#    extra_context = {'name': _('Registration'),}
 class TaskUpdateView(UpdateView):
     
     model = Tasks
     form_class = TaskForm
     template_name = 'tasks/update.html'
-#    fields = [
-#            'id', 'name', 'discription', 'status', 'executor', 'label'
-#        ]
-    success_url = reverse_lazy('tasks:task_index')
-#    extra_context = {'name': _('Changing a task'),}
 
     def post(self, request, *args, **kwargs):
         form = TaskForm(request.POST)  # Получаем данные формы из запроса
+        task_id = kwargs.get('pk') 
+        task = Tasks.objects.get(id=task_id)
         if form.is_valid():  # Проверяем данные формы на корректность
             response = form.save(commit=False)
-            response.author = request.user
-            response.save()
+            response.id = task_id
+            response.author = task.author
+            response.created_at = task.created_at
+            form.save()
             messages.success(request, _('The task was successfully modified'), extra_tags='alert alert-success')
-#            return super().post(request, *args, **kwargs)
             return redirect('tasks:task_index')
-#        return render(request, 'tasks/update.html', context={
-#            'name': _('Changing a task'),
-#            'form': form,
-#            })
 
 
 class TaskDeleteView(DeleteView):
     
     model = Tasks
-#    template_name = 'tasks/delete.html'
     success_url = reverse_lazy('tasks:task_index')
 
     def get(self, request, *args, **kwargs):
         task_id = kwargs.get('pk') 
         task = Tasks.objects.get(id=task_id)
-#        user_id = self.request.user.id        
-#        author = Users.objects.get(id=user_id)
-##        if task['author'] == author:
-#        if Tasks.objects.filter(author=author):
-        return render(request, 'tasks/delete.html', context={
-            'name': _('Deleting a task'),
-            'task': task,
-        })
-#        else:
-#            messages.error(request, _('A task can only be deleted by its author.'), extra_tags='alert alert-danger')
-#            return redirect('/tasks')
+        author = request.user.username
+        if task.author == author:
+            return render(request, 'tasks/delete.html', context={
+                'name': _('Deleting a task'),
+                'task': task,
+            })
+        else:
+            messages.error(request, _('A task can only be deleted by its author.'), extra_tags='alert alert-danger')
+            return redirect('/tasks')
 
     def post(self, request, *args, **kwargs):
         messages.success(request, _('Task deleted successfully'), extra_tags='alert alert-success')
         return super().post(request, *args, **kwargs)
-
-#    def get(self, request, *args, **kwargs):
-#        task_id = kwargs.get('id')
-#        user_id = self.request.user.id
-#        task = Tasks.objects.get(id=task_id)
-#        author = Users.objects.get(id=user_id)
-#        if task['author'] == author:
-#            return render(request, 'tasks/delete.html', context={
-#                'name': _('Deleting a task'),
-#                'task': task['name'],
-#            })        
-#        else:
-#            messages.error(request, _('A task can only be deleted by its author.'), extra_tags='alert alert-danger')
-#            return redirect('/tasks')
-
-#    def post(self, request, *args, **kwargs):
-#        task_id = kwargs.get('pk')
-#        task = Tasks.objects.get(id=task_id)
-#        if task:
-#            task.delete()
-#            messages.success(request, _('Task deleted successfully'), extra_tags='alert alert-success')            
-#            return redirect('/tasks')
-
-
-# Фильтр
-#
-# select Статус
-# select Исполнитель
-# select Метка
-# checkbox Только свои задачи
-# кнопка Показать
-
-# ID 	Имя 	Статус 	Автор 	Исполнитель 	Дата создания
-
-
-# Create a task
-# Task created successfully
-
-# Changing a task
-# The task was successfully modified
-
-# Deleting a task
-# A task can only be deleted by its author.
-# Are you sure you want to delete {}? (все как при удалении пользователя)
-# Task deleted successfully
