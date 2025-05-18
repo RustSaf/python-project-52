@@ -1,14 +1,16 @@
-from django.shortcuts import redirect, render
-from django.urls import reverse, reverse_lazy
 from django.contrib import messages
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views import View
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+
+from task_manager.labels.models import Labels
+from task_manager.statuses.models import Statuses
+from task_manager.users.models import Users
+
 from .forms import *
 from .models import Tasks
-from task_manager.users.models import Users
-from task_manager.statuses.models import Statuses
-from task_manager.labels.models import Labels
 
 
 class IndexView(View):
@@ -37,7 +39,6 @@ class IndexView(View):
         valid = 'is-valid' if (status or executor or label or is_self_tasks) else ''
 
         tasks = tasks_status & task_executor & task_label & self_tasks
-
 
         return render(request, 'tasks/index.html', context={
             'name': _('Tasks'),

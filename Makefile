@@ -4,31 +4,14 @@ install:
 test:
 	uv run pytest
 
-#lint:
-#	poetry run flake8 page_analyzer
-
 ruff:
 	uv run ruff check
-
-selfcheck:
-	uv check
-
-check: 
-	selfcheck test lint
 
 build:
 	./build.sh
 
-# publish:
-# 	uv publish --dry-run
-
-# package-install:
-# 	python3 -m pip install --user dist/*.whl
-
-#dev:
-#	poetry run flask --app page_analyzer:app run --debug
 migrate:
-	uv run python3 manage.py migrate
+	uv run python3 manage.py makemigrations && uv run python3 manage.py migrate
 
 collectstatic:
 	uv run python3 manage.py collectstatic --noinput --clear
@@ -47,14 +30,7 @@ bootstrap:
 	install
 	test
 	ruff
-#	lint
-	selfcheck
-	check
 	build
-#	publish
-#	package-install
-#	start
-#	dev
 	migrate
 	collectstatic
 	render-start

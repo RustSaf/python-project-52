@@ -1,26 +1,18 @@
-from django.shortcuts import redirect, render
-from django.urls import reverse, reverse_lazy
 from django.contrib import messages
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views import View
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-#from django.views.generic import ListView
-from .forms import *
-from .models import Labels
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+
 from task_manager.tasks.models import Tasks
 
+from .forms import *
+from .models import Labels
 
 
 class IndexView(View):
 
-#    model = Labels
-#    template_name = 'labels/index.html'
-#    success_url = reverse_lazy('labels:label_index')
-#    labels = Labels.objects.all()
-#    extra_context = {
-#        'name': _('Labels'),
-#        'labels': labels,
-#        }
     def get(self, request, *args, **kwargs):
         labels = Labels.objects.all()
         return render(request, 'labels/index.html', context={
@@ -31,7 +23,6 @@ class IndexView(View):
 
 class LabelCreateView(CreateView):
     
-#    model = Labels
     form_class = LabelForm
     template_name = 'labels/create.html'
     success_url = reverse_lazy('labels:label_index')
@@ -50,7 +41,7 @@ class LabelUpdateView(UpdateView):
     form_class = LabelForm
     template_name = 'labels/update.html'
     success_url = reverse_lazy('labels:label_index')
-    extra_context = {'name': _('Change label'),}
+    extra_context = {'name': _('Change label'), }
 
     def post(self, request, *args, **kwargs): 
         messages.success(request, _('The label has been changed successfully'), extra_tags='alert alert-success')
@@ -60,7 +51,6 @@ class LabelUpdateView(UpdateView):
 class LabelDeleteView(DeleteView):
     
     model = Labels
-#    template_name = 'labels/delete.html'
     success_url = reverse_lazy('labels:label_index')
 
     def get(self, request, *args, **kwargs):

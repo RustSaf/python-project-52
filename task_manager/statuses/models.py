@@ -1,11 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-# Create your models here.
-
-# id
-# Name
-# Дата создания и модификации
 
 class Statuses(models.Model):
     

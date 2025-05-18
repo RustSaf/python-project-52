@@ -65,7 +65,6 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-#    "django.contrib.auth.backends.ModelBackend",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -119,21 +118,12 @@ DATABASES = {
 AUTH_USER_MODEL='users.Users'
 
 AUTH_PASSWORD_VALIDATORS = [
-#    {
-#        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-#    },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
         'OPTIONS': {
             'min_length': 3,
         },
     },
-#    {
-#        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-#    },
-#    {
-#        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-#    },
 ]
 
 
@@ -160,8 +150,15 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 WHITENOISE_MANIFEST_STRICT = False
+
+if DEBUG:
+    STATICFILES_DIRS=['staticfiles']
+    STATIC_ROOT = None
+else:
+    STATICFILES_DIRS=[]
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -169,4 +166,3 @@ REGISTRATION_AUTO_LOGIN = False
 LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'index'
-
