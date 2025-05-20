@@ -31,7 +31,11 @@ class StatusCreateView(CreateView):
         }
     
     def post(self, request, *args, **kwargs): 
-        messages.success(request, _('Status created successfully'), extra_tags='alert alert-success')
+        messages.success(
+            request,
+            _('Status created successfully'),
+            extra_tags='alert alert-success'
+            )
         return super().post(request, *args, **kwargs)
 
 
@@ -44,7 +48,11 @@ class StatusUpdateView(UpdateView):
     extra_context = {'name': _('Change of status'), }
 
     def post(self, request, *args, **kwargs): 
-        messages.success(request, _('Status changed successfully'), extra_tags='alert alert-success')
+        messages.success(
+            request,
+            _('Status changed successfully'),
+            extra_tags='alert alert-success'
+            )
         return super().post(request, *args, **kwargs)
 
 
@@ -64,8 +72,16 @@ class StatusDeleteView(DeleteView):
     def post(self, request, *args, **kwargs):
         status_id = kwargs.get('pk') 
         if Tasks.objects.filter(status=status_id):
-            messages.error(request, _('Cannot delete status because it is in use'), extra_tags='alert alert-danger')
+            messages.error(
+                request,
+                _('Cannot delete status because it is in use'),
+                extra_tags='alert alert-danger'
+                )
             return redirect('/statuses')
         else:
-            messages.success(request, _('Status deleted successfully'), extra_tags='alert alert-success')
+            messages.success(
+                request,
+                _('Status deleted successfully'),
+                extra_tags='alert alert-success'
+                )
             return super().post(request, *args, **kwargs)

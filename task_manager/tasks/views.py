@@ -31,12 +31,17 @@ class IndexView(View):
         label = Labels.objects.get(id=label_id) if label_id else None
         user = request.user
 
-        tasks_status = Tasks.objects.filter(status=status_id) if status_id else Tasks.objects.all()
-        task_executor = Tasks.objects.filter(executor=executor_id) if executor_id else Tasks.objects.all()
-        task_label = Tasks.objects.filter(label=label_id) if label_id else Tasks.objects.all()
-        self_tasks = Tasks.objects.filter(author=user) if (user and is_self_tasks) else Tasks.objects.all()
+        tasks_status = Tasks.objects.filter(
+            status=status_id) if status_id else Tasks.objects.all()
+        task_executor = Tasks.objects.filter(
+            executor=executor_id) if executor_id else Tasks.objects.all()
+        task_label = Tasks.objects.filter(
+            label=label_id) if label_id else Tasks.objects.all()
+        self_tasks = Tasks.objects.filter(
+            author=user) if (user and is_self_tasks) else Tasks.objects.all()
 
-        valid = 'is-valid' if (status or executor or label or is_self_tasks) else ''
+        valid = 'is-valid' if (
+            status or executor or label or is_self_tasks) else ''
 
         tasks = tasks_status & task_executor & task_label & self_tasks
 
@@ -65,7 +70,11 @@ class TaskCreateView(CreateView):
             response = form.save(commit=False)
             response.author = request.user
             response.save()
-            messages.success(request, _('Task created successfully'), extra_tags='alert alert-success')
+            messages.success(
+                request,
+                _('Task created successfully'),
+                extra_tags='alert alert-success'
+                )
             return redirect('tasks:task_index')
         return render(request, 'tasks/create.html', context={
             'name': _('Create a task'),
@@ -89,7 +98,11 @@ class TaskUpdateView(UpdateView):
             response.author = task.author
             response.created_at = task.created_at
             form.save()
-            messages.success(request, _('The task was successfully modified'), extra_tags='alert alert-success')
+            messages.success(
+                request,
+                _('The task was successfully modified'),
+                extra_tags='alert alert-success'
+                )
             return redirect('tasks:task_index')
 
 
@@ -108,9 +121,17 @@ class TaskDeleteView(DeleteView):
                 'task': task,
             })
         else:
-            messages.error(request, _('A task can only be deleted by its author.'), extra_tags='alert alert-danger')
+            messages.error(
+                request,
+                _('A task can only be deleted by its author'),
+                extra_tags='alert alert-danger'
+                )
             return redirect('/tasks')
 
     def post(self, request, *args, **kwargs):
-        messages.success(request, _('Task deleted successfully'), extra_tags='alert alert-success')
+        messages.success(
+            request,
+            _('Task deleted successfully'),
+            extra_tags='alert alert-success'
+            )
         return super().post(request, *args, **kwargs)

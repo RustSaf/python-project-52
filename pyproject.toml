@@ -32,4 +32,4 @@ exclude = [".venv", "migrations", "task_manager/settings.py"]
 [tool.ruff.lint]
 preview = true
 select = ["E", "F", "I", "C90"]
-ignore = ["F401"]
+ignore = ["F401", "F403", "F405"]

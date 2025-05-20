@@ -25,15 +25,25 @@ class LoginUserView(LoginView):
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         if form.is_valid():
-            messages.success(request, _('You are logged in'), extra_tags='alert alert-success')
+            messages.success(
+                request,
+                _('You are logged in'),
+                extra_tags='alert alert-success'
+                )
             return self.form_valid(form)
         else:
-            form.fields['username'].widget.attrs.update({'class': 'form-control is-invalid'})
-            form.fields['password'].widget.attrs.update({'class': 'form-control is-invalid'})
+            form.fields['username'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            form.fields['password'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
             return self.form_invalid(form)
 
 
 def logout_view(request):
     logout(request)
-    messages.success(request, _('You are logged out'), extra_tags='alert alert-primary')
+    messages.success(
+        request,
+        _('You are logged out'),
+        extra_tags='alert alert-primary'
+        )
     return redirect('/')

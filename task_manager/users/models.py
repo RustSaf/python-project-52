@@ -5,16 +5,31 @@ from django.utils.translation import gettext_lazy as _
 
 class Users(AbstractUser, PermissionsMixin):
     
-    first_name = models.TextField(max_length=150, verbose_name=_('Name'))
-    last_name = models.TextField(max_length=150, verbose_name=_('Surname'))
+    first_name = models.TextField(
+        max_length=150,
+        verbose_name=_('Name')
+        )
+    last_name = models.TextField(
+        max_length=150,
+        verbose_name=_('Surname')
+        )
     username = models.TextField(
         max_length=150,
         unique=True,
         verbose_name=_('Username'),
         )
-    password = models.TextField(max_length=20, verbose_name=_('Password'))
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Creation date'))
-    updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Update date'))
+    password = models.TextField(
+        max_length=20,
+        verbose_name=_('Password')
+        )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_('Creation date')
+        )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_('Update date')
+        )
  
     USERNAME_FIELD = 'username'
 

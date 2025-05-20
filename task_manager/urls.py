@@ -36,4 +36,4 @@ urlpatterns = [
         include('task_manager.tasks.urls', namespace='tasks'),
         ),
     path("admin/", admin.site.urls),
-]
+    ]

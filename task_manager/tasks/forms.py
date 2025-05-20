@@ -10,7 +10,8 @@ class TaskForm(ModelForm):
     class Meta:
         model = Tasks
         fields = [
-            'id', 'name', 'author', 'discription', 'status', 'executor', 'label'
+            'id', 'name', 'author', 'discription',
+            'status', 'executor', 'label'
         ]
         required = True
         label = {

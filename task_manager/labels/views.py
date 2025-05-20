@@ -31,7 +31,11 @@ class LabelCreateView(CreateView):
         }
     
     def post(self, request, *args, **kwargs): 
-        messages.success(request, _('Label created successfully'), extra_tags='alert alert-success')
+        messages.success(
+            request,
+            _('Label created successfully'),
+            extra_tags='alert alert-success'
+            )
         return super().post(request, *args, **kwargs)
 
 
@@ -44,7 +48,11 @@ class LabelUpdateView(UpdateView):
     extra_context = {'name': _('Change label'), }
 
     def post(self, request, *args, **kwargs): 
-        messages.success(request, _('The label has been changed successfully'), extra_tags='alert alert-success')
+        messages.success(
+            request,
+            _('The label has been changed successfully'),
+            extra_tags='alert alert-success'
+            )
         return super().post(request, *args, **kwargs)
 
 
@@ -64,8 +72,16 @@ class LabelDeleteView(DeleteView):
     def post(self, request, *args, **kwargs):
         label_id = kwargs.get('pk') 
         if Tasks.objects.filter(label=label_id):
-            messages.error(request, _('Cannot delete label because it is in use'), extra_tags='alert alert-danger')
+            messages.error(
+                request,
+                _('Cannot delete label because it is in use'),
+                extra_tags='alert alert-danger'
+                )
             return redirect('/labels')
         else:
-            messages.success(request, _('Label successfully removed'), extra_tags='alert alert-success')
+            messages.success(
+                request,
+                _('Label successfully removed'),
+                extra_tags='alert alert-success'
+                )
             return super().post(request, *args, **kwargs)

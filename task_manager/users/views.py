@@ -34,7 +34,11 @@ class UserCreateView(CreateView):
             password = form.cleaned_data.get('password', '')
             myuser.set_password(password)
             myuser.save()
-            messages.success(request, _('User successfully registered'), extra_tags='alert alert-success')
+            messages.success(
+                request,
+                _('User successfully registered'),
+                extra_tags='alert alert-success'
+                )
             return redirect('/login')
         return render(request, 'users/create.html', context={
             'name': _('Registration'),
@@ -46,9 +50,14 @@ class UserUpdateView(LoginRequiredMixin, View):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, _('You are not logged in! Please sign in.'), extra_tags='alert alert-danger')
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
             return self.handle_no_permission()
-        return super(LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         user_id = kwargs.get('pk')   
@@ -62,7 +71,11 @@ class UserUpdateView(LoginRequiredMixin, View):
                     'user_id': user_id,
                     })        
         else:
-            messages.error(request, _('You do not have permission to modify another user.'), extra_tags='alert alert-danger')
+            messages.error(
+                request,
+                _('You do not have permission to modify another user'),
+                extra_tags='alert alert-danger'
+                )
             return redirect('/users')
   
     def post(self, request, *args, **kwargs):
@@ -75,7 +88,11 @@ class UserUpdateView(LoginRequiredMixin, View):
             user.set_password(password)
             user.save()
             form.save()
-            messages.success(request, _('User successfully changed'), extra_tags='alert alert-success')
+            messages.success(
+                request,
+                _('User successfully changed'),
+                extra_tags='alert alert-success'
+                )
             return redirect('/users')
 
         return render(
@@ -90,9 +107,14 @@ class UserDeleteView(LoginRequiredMixin, View):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            messages.error(request, _('You are not logged in! Please sign in.'), extra_tags='alert alert-danger')
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
             return self.handle_no_permission()
-        return super(LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         user_id = kwargs.get('pk') 
@@ -103,7 +125,11 @@ class UserDeleteView(LoginRequiredMixin, View):
                 'user': user,
             })       
         else:
-            messages.error(request, _('You do not have permission to modify another user.'), extra_tags='alert alert-danger')
+            messages.error(
+                request,
+                _('You do not have permission to modify another user'),
+                extra_tags='alert alert-danger'
+                )
             return redirect('/users')
 
     def post(self, request, *args, **kwargs):
@@ -111,5 +137,9 @@ class UserDeleteView(LoginRequiredMixin, View):
         user = Users.objects.get(id=user_id)
         if user:
             user.delete()
-            messages.success(request, _('User deleted successfully'), extra_tags='alert alert-success')            
+            messages.success(
+                request,
+                _('User deleted successfully'),
+                extra_tags='alert alert-success'
+                )
             return redirect('/users')

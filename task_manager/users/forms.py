@@ -36,7 +36,10 @@ class UserForm(ModelForm):
     username = forms.CharField(
         required=True,
         label=_("Username"),
-        help_text=_("Required field. No more than 150 characters. Letters, numbers and symbols only @/./+/-/_."),
+        help_text=_(
+            """Required field. No more than 150 characters.
+            Letters, numbers and symbols only @/./+/-/_."""
+            ),
         widget=forms.TextInput(attrs={
             'name': "username",
             'maxlength': "150",
@@ -49,7 +52,7 @@ class UserForm(ModelForm):
     password = forms.CharField(
         required=True,
         label=_("Password"),
-        help_text=_("Your password must be at least 3 characters long."),
+        help_text=_("Your password must be at least 3 characters long"),
         widget=forms.PasswordInput(attrs={
             'class': "form-control",
             'name': "password1",
@@ -61,7 +64,7 @@ class UserForm(ModelForm):
     password_confirm = forms.CharField(
         required=True,
         label=_("Password confirm"),
-        help_text=_("To confirm, please enter the password again."),
+        help_text=_("To confirm, please enter the password again"),
         widget=forms.PasswordInput(attrs={
             'class': "form-control",
             'name': "password2",
@@ -80,34 +83,63 @@ class UserForm(ModelForm):
         password_confirm = cleaned_data.get('password_confirm')
         
         if first_name:
-            self.fields['first_name'].widget.attrs.update({'class': 'form-control is-valid'})
+            self.fields['first_name'].widget.attrs.update({
+                'class': 'form-control is-valid'})
         
         if last_name:
-            self.fields['last_name'].widget.attrs.update({'class': 'form-control is-valid'})
+            self.fields['last_name'].widget.attrs.update({
+                'class': 'form-control is-valid'})
         
         pattern = re.compile(r'^[\w@,+-]{1,150}$')
-        user_exists = username is not None and Users.objects.filter(username=username).exists()
+        user_exists = username is not None and Users.objects.filter(
+            username=username).exists()
 
         if not pattern.match(username):
-            self.fields['username'].widget.attrs.update({'class': 'form-control is-invalid'})
-            self.add_error('username', _("Please enter a valid username. It can only contain letters, numbers and @/./+/-/_ signs."))
+            self.fields['username'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'username',
+                _(
+                    """Please enter a valid username.
+                    It can only contain letters,
+                    numbers and @/./+/-/_ signs."""
+                    )
+                )
         elif user_exists:
-            self.fields['username'].widget.attrs.update({'class': 'form-control is-invalid'})
-            self.add_error('username', _("A user with this name already exists."))
+            self.fields['username'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'username',
+                _("A user with this name already exists")
+                )
         else:
-            self.fields['username'].widget.attrs.update({'class': 'form-control is-valid'})
+            self.fields['username'].widget.attrs.update({
+                'class': 'form-control is-valid'})
 
         if password != password_confirm:
-            self.fields['password_confirm'].widget.attrs.update({'class': 'form-control is-invalid'})
-            self.add_error('password_confirm', _("The passwords entered do not match."))
+            self.fields['password_confirm'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'password_confirm',
+                _("The passwords entered do not match")
+                )
         else:
-            self.fields['password_confirm'].widget.attrs.update({'class': 'form-control is-valid'})
+            self.fields['password_confirm'].widget.attrs.update({
+                'class': 'form-control is-valid'})
 
         if len(password) < 3:
-            self.fields['password'].widget.attrs.update({'class': 'form-control is-invalid'})
-            self.add_error('password', _("The password you entered is too short. It must support at least 3 characters."))
+            self.fields['password'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'password',
+                _(
+                    """The password you entered is too short.
+                    It must support at least 3 characters."""
+                    )
+                )
         else:
-            self.fields['password'].widget.attrs.update({'class': 'form-control is-valid'})
+            self.fields['password'].widget.attrs.update({
+                'class': 'form-control is-valid'})
 
         return cleaned_data
         
@@ -115,7 +147,8 @@ class UserForm(ModelForm):
         
         model = Users
         fields = [
-            'id', 'first_name', 'last_name', 'username', 'password', 'password_confirm'
+            'id', 'first_name', 'last_name',
+            'username', 'password', 'password_confirm'
             ]
 
 
@@ -131,35 +164,63 @@ class UserUpdateForm(UserForm):
         password_confirm = self.cleaned_data.get('password_confirm')
         
         if first_name:
-            self.fields['first_name'].widget.attrs.update({'class': 'form-control is-valid'})
+            self.fields['first_name'].widget.attrs.update({
+                'class': 'form-control is-valid'})
         
         if last_name:
-            self.fields['last_name'].widget.attrs.update({'class': 'form-control is-valid'})
+            self.fields['last_name'].widget.attrs.update({
+                'class': 'form-control is-valid'})
 
         try:
             pattern = re.compile(r'^[\w@,+-]{1,150}$')
             if not pattern.match(username):
-                self.fields['username'].widget.attrs.update({'class': 'form-control is-invalid'})
-                self.add_error('username', _("Please enter a valid username. It can only contain letters, numbers and @/./+/-/_ signs."))
+                self.fields['username'].widget.attrs.update({
+                    'class': 'form-control is-invalid'})
+                self.add_error(
+                    'username',
+                    _(
+                        """Please enter a valid username.
+                        It can only contain letters,
+                        numbers and @/./+/-/_ signs."""
+                        )
+                    )
             else:
-                self.fields['username'].widget.attrs.update({'class': 'form-control is-valid'})
+                self.fields['username'].widget.attrs.update({
+                    'class': 'form-control is-valid'})
         except IntegrityError():
-            self.fields['username'].widget.attrs.update({'class': 'form-control is-invalid'})
-            self.add_error('username', _("A user with this name already exists."))
+            self.fields['username'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'username',
+                _("A user with this name already exists")
+                )
         except Exception as e:
             raise e
 
         if password != password_confirm:
-            self.fields['password_confirm'].widget.attrs.update({'class': 'form-control is-invalid'})
-            self.add_error('password_confirm', _("The passwords entered do not match."))
+            self.fields['password_confirm'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'password_confirm',
+                _("The passwords entered do not match")
+                )
         else:
-            self.fields['password_confirm'].widget.attrs.update({'class': 'form-control is-valid'})
+            self.fields['password_confirm'].widget.attrs.update({
+                'class': 'form-control is-valid'})
 
         if len(password) < 3:
-            self.fields['password'].widget.attrs.update({'class': 'form-control is-invalid'})
-            self.add_error('password', _("The password you entered is too short. It must support at least 3 characters."))
+            self.fields['password'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'password',
+                _(
+                    """The password you entered is too short.
+                    It must support at least 3 characters."""
+                    )
+                )
         else:
-            self.fields['password'].widget.attrs.update({'class': 'form-control is-valid'})
+            self.fields['password'].widget.attrs.update({
+                'class': 'form-control is-valid'})
 
         return self.cleaned_data
 
