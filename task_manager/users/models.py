@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.urls import reverse
 
 
 class Users(AbstractUser, PermissionsMixin):
@@ -32,6 +33,12 @@ class Users(AbstractUser, PermissionsMixin):
         )
  
     USERNAME_FIELD = 'username'
+
+    def get_absolute_url_update(self):
+        return reverse('users:user_update', args=[str(self.id)])
+    
+    def get_absolute_url_delete(self):
+        return reverse('users:user_delete', args=[str(self.id)])
 
     def __str__(self):
         return self.username
