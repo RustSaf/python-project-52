@@ -5,7 +5,7 @@ from django.urls import reverse
 
 
 class Users(AbstractUser, PermissionsMixin):
-    
+
     first_name = models.TextField(
         max_length=150,
         verbose_name=_('Name')

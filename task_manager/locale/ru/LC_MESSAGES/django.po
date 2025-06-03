@@ -261,8 +261,8 @@ msgstr "Обновить"
 
 #: task_manager/templates/login.html:13
 msgid ""
-"Please enter a valid username and password. Both fields may be case "
-"sensitive."
+"Please enter a correct Username and password. " 
+"Note that both fields may be case-sensitive."
 msgstr ""
 "Введите действительные имя пользователя и пароль. Оба поля могут быть "
 "чувствительны к регистру."

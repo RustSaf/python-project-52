@@ -81,7 +81,7 @@ class UserUpdateView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         user_id = kwargs.get('pk')
         user = Users.objects.get(id=user_id)
-        form = UserUpdateForm(request, instance=user)
+        form = UserUpdateForm(request.POST, instance=user)
         if form.is_valid():
             form.clean()
             password = form.cleaned_data.get('password', '')

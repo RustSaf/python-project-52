@@ -153,7 +153,7 @@ class UserUpdateFormTest(TestCase):
         # Сравнить значение с ожидаемым результатом
         self.assertFalse(form1.is_valid())
         self.assertTrue(form2.is_valid())
-        self.assertTrue(form3.is_valid())
+        self.assertFalse(form3.is_valid())
 
     # Проверка правильности работы валидации формы по паролю
     def test_userform_password_is_valid(self):
