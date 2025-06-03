@@ -24,14 +24,14 @@ class Tasks(models.Model):
         )
     status = models.ForeignKey(
         Statuses,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
         verbose_name=_("Status")
         )
     executor = models.ForeignKey(
         Users,
-        on_delete=models.PROTECT,
+        on_delete=models.SET_NULL,
         blank=True,
         null=True,
         verbose_name=_("Executor")

@@ -118,6 +118,7 @@ class LoginUserViewTest(TestCase):
         """Please enter a correct Username and password. Note that both fields may be case-sensitive."""  # noqa: E501
                         )
 
+
 class LogoutUserViewTest(TestCase):
 
     def setUp(self):
@@ -140,7 +141,7 @@ class LogoutUserViewTest(TestCase):
         # Проверка корректности template
         self.assertRedirects(resp, '/')
         self.assertTemplateUsed(resp, 'index.html')
-        
+
         # Должно быть хотябы одно сообщение, смотрим текст сообщения и тэг
         messages_list1 = list(resp.context['messages'])
         self.assertEqual(len(messages_list1), 1)
@@ -311,3 +312,68 @@ class UserUpdateViewTest(TestCase):
         self.assertEqual(form1.errors['username'][0],
                     """A user with this name already exists"""
                         )
+        
+
+class UserDeleteViewTest(TestCase):
+
+    def setUp(self):
+
+        author1 = Users.objects.create_user(
+            first_name='John', last_name='Snow',
+            username='White_Wolf',
+            password='12345'
+            )
+        author1.save()
+
+        author2 = Users.objects.create_user(
+            first_name='Daenerys', last_name='Targaryen',
+            username='Born_of_the_Storm',
+            password='12345'
+        )
+        author2.save()
+
+    def test_view_url_exists_at_desired_location(self):
+
+        resp = self.client.get('/users/1/delete/', follow=True)
+        # Проверка ответа на запрос
+        self.assertEqual(resp.status_code, 200)
+
+    def test_view_uses_correct_template_and_message(self):
+        
+        # Логинимся под первым пользователем до и после удаления
+        # и получаем response по id=1
+        self.client.login(username='White_Wolf', password='12345')
+        resp1 = self.client.get('/users/1/delete/')
+        resp2 = self.client.post('/users/1/delete/', follow=True)
+        resp3 = self.client.login(username='White_Wolf', password='12345')
+        # Логинимся под вторым пользователем, получаем response 
+        # на get-запрос по id=1
+        self.client.login(username='Born_of_the_Storm', password='12345')
+        resp4 = self.client.get('/users/1/delete/', follow=True)
+
+        # Проверка ответа на запрос
+        self.assertEqual(resp1.status_code, 200)
+        self.assertEqual(resp2.status_code, 200)
+        self.assertFalse(resp3)  # Проверка отсутствия удаленного пользователя
+        self.assertEqual(resp4.status_code, 200)
+
+        # Проверка корректности template и формы
+        self.assertTemplateUsed(resp1, 'users/delete.html')
+        self.assertRedirects(resp2, '/users/')
+        self.assertTemplateUsed(resp2, 'users/index.html')
+        self.assertRedirects(resp4, '/users/')
+        self.assertTemplateUsed(resp4, 'users/index.html')
+
+        # Должно быть хотябы одно сообщение, смотрим текст сообщения и тэг
+        messages_list1 = list(resp2.context['messages'])
+        self.assertEqual(len(messages_list1), 1)
+        message = messages_list1[0]
+        self.assertEqual(message.message, 'User deleted successfully')
+        self.assertEqual(message.tags, 'alert alert-success success')
+
+        messages_list2 = list(resp4.context['messages'])
+        self.assertEqual(len(messages_list2), 1)
+        message = messages_list2[0]
+        self.assertEqual(message.message,
+                         'You do not have permission to modify another user')
+        self.assertEqual(message.tags, 'alert alert-danger error')
