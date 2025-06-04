@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -11,7 +12,18 @@ from .forms import *
 from .models import Labels
 
 
-class IndexView(View):
+class IndexView(LoginRequiredMixin, View):
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
+            return self.handle_no_permission()
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         labels = Labels.objects.all()
@@ -19,9 +31,9 @@ class IndexView(View):
             'name': _('Labels'),
             'labels': labels,
         })
-    
 
-class LabelCreateView(CreateView):
+
+class LabelCreateView(LoginRequiredMixin, CreateView):
     
     form_class = LabelForm
     template_name = 'labels/create.html'
@@ -29,7 +41,18 @@ class LabelCreateView(CreateView):
     extra_context = {
         'name': _('Create a label'),
         }
-    
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
+            return self.handle_no_permission()
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs): 
         messages.success(
             request,
@@ -39,13 +62,24 @@ class LabelCreateView(CreateView):
         return super().post(request, *args, **kwargs)
 
 
-class LabelUpdateView(UpdateView):
+class LabelUpdateView(LoginRequiredMixin, UpdateView):
     
     model = Labels
     form_class = LabelForm
     template_name = 'labels/update.html'
     success_url = reverse_lazy('labels:label_index')
     extra_context = {'name': _('Change label'), }
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
+            return self.handle_no_permission()
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs): 
         messages.success(
@@ -56,10 +90,21 @@ class LabelUpdateView(UpdateView):
         return super().post(request, *args, **kwargs)
 
 
-class LabelDeleteView(DeleteView):
+class LabelDeleteView(LoginRequiredMixin, DeleteView):
     
     model = Labels
     success_url = reverse_lazy('labels:label_index')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
+            return self.handle_no_permission()
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         label_id = kwargs.get('pk') 

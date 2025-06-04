@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -11,8 +12,19 @@ from .forms import *
 from .models import Statuses
 
 
-class IndexView(View):
+class IndexView(LoginRequiredMixin, View):
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
+            return self.handle_no_permission()
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
+    
     def get(self, request, *args, **kwargs):
         statuses = Statuses.objects.all()
         return render(request, 'statuses/index.html', context={
@@ -21,7 +33,7 @@ class IndexView(View):
         })
 
 
-class StatusCreateView(CreateView):
+class StatusCreateView(LoginRequiredMixin, CreateView):
     
     form_class = StatusForm
     template_name = 'statuses/create.html'
@@ -29,6 +41,17 @@ class StatusCreateView(CreateView):
     extra_context = {
         'name': _('Create status'),
         }
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
+            return self.handle_no_permission()
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs): 
         messages.success(
@@ -39,13 +62,24 @@ class StatusCreateView(CreateView):
         return super().post(request, *args, **kwargs)
 
 
-class StatusUpdateView(UpdateView):
+class StatusUpdateView(LoginRequiredMixin, UpdateView):
     
     model = Statuses
     form_class = StatusForm
     template_name = 'statuses/update.html'
     success_url = reverse_lazy('statuses:status_index')
     extra_context = {'name': _('Change of status'), }
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
+            return self.handle_no_permission()
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs): 
         messages.success(
@@ -56,7 +90,7 @@ class StatusUpdateView(UpdateView):
         return super().post(request, *args, **kwargs)
 
 
-class StatusDeleteView(DeleteView):
+class StatusDeleteView(LoginRequiredMixin, DeleteView):
     
     model = Statuses
     success_url = reverse_lazy('statuses:status_index')
@@ -67,7 +101,18 @@ class StatusDeleteView(DeleteView):
         return render(request, 'statuses/delete.html', context={
             'name': _('Deleting status'),
             'status': status,
-        })      
+        })
+    
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
+            return self.handle_no_permission()
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)  
 
     def post(self, request, *args, **kwargs):
         status_id = kwargs.get('pk') 

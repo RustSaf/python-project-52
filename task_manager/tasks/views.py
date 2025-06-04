@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -13,8 +14,19 @@ from .forms import *
 from .models import Tasks
 
 
-class IndexView(View):
+class IndexView(LoginRequiredMixin, View):
     
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
+            return self.handle_no_permission()
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
+
     def get(self, request, *args, **kwargs):
 
         statuses = Statuses.objects.all()
@@ -59,10 +71,21 @@ class IndexView(View):
         })
 
 
-class TaskCreateView(CreateView):
+class TaskCreateView(LoginRequiredMixin, CreateView):
     
     form_class = TaskForm
     template_name = 'tasks/create.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
+            return self.handle_no_permission()
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         form = TaskForm(request.POST)  # Получаем данные формы из запроса
@@ -82,12 +105,23 @@ class TaskCreateView(CreateView):
             })
 
 
-class TaskUpdateView(UpdateView):
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
     
     model = Tasks
     form_class = TaskForm
     template_name = 'tasks/update.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
+            return self.handle_no_permission()
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
+    
     def post(self, request, *args, **kwargs):
         form = TaskForm(request.POST)  # Получаем данные формы из запроса
         task_id = kwargs.get('pk') 
@@ -106,10 +140,21 @@ class TaskUpdateView(UpdateView):
             return redirect('tasks:task_index')
 
 
-class TaskDeleteView(DeleteView):
+class TaskDeleteView(LoginRequiredMixin, DeleteView):
     
     model = Tasks
     success_url = reverse_lazy('tasks:task_index')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
+            return self.handle_no_permission()
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         task_id = kwargs.get('pk') 

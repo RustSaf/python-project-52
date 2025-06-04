@@ -4,12 +4,6 @@ from django.utils.translation import gettext_lazy as _
 
 from task_manager.users.forms import LoginUserForm, UserForm, UserUpdateForm
 from task_manager.users.models import Users
-from task_manager.users.views import (
-    IndexView,
-    UserCreateView,
-    UserDeleteView,
-    UserUpdateView,
-)
 
 
 # Create your tests here.
@@ -107,7 +101,7 @@ class LoginUserViewTest(TestCase):
         messages_list1 = list(resp2.context['messages'])
         self.assertEqual(len(messages_list1), 1)
         message = messages_list1[0]
-        self.assertEqual(message.message, 'You are logged in')
+        self.assertEqual(message.message, _('You are logged in'))
         self.assertEqual(message.tags, 'alert alert-success success')
 
         # Проверяем текст сообщения при неудачном входе из вывода формы
@@ -115,7 +109,7 @@ class LoginUserViewTest(TestCase):
         # Проверяем наличие ошибок в поле
         self.assertIn('__all__', form.errors)
         self.assertEqual(form.errors['__all__'][0],
-        """Please enter a correct Username and password. Note that both fields may be case-sensitive."""  # noqa: E501
+        _("""Please enter a correct Username and password. Note that both fields may be case-sensitive.""")  # noqa: E501
                         )
 
 
@@ -146,7 +140,7 @@ class LogoutUserViewTest(TestCase):
         messages_list1 = list(resp.context['messages'])
         self.assertEqual(len(messages_list1), 1)
         message = messages_list1[0]
-        self.assertEqual(message.message, 'You are logged out')
+        self.assertEqual(message.message, _('You are logged out'))
         self.assertEqual(message.tags, 'alert alert-primary success')
 
 
@@ -204,7 +198,7 @@ class UserCreateViewTest(TestCase):
         messages_list1 = list(resp2.context['messages'])
         self.assertEqual(len(messages_list1), 1)
         message = messages_list1[0]
-        self.assertEqual(message.message, 'User successfully registered')
+        self.assertEqual(message.message, _('User successfully registered'))
         self.assertEqual(message.tags, 'alert alert-success success')
 
         # Проверяем текст сообщения формы при неудачной регистрации
@@ -214,20 +208,20 @@ class UserCreateViewTest(TestCase):
         # Проверяем наличие ошибок в поле
         self.assertIn('username', form1.errors)
         self.assertEqual(form1.errors['username'][0],
-                    """Please enter a valid username.
+                    _("""Please enter a valid username.
                     It can only contain letters,
-                    numbers and @/./+/-/_ signs."""
+                    numbers and @/./+/-/_ signs.""")
                         )
         
         self.assertIn('username', form2.errors)
         self.assertEqual(form2.errors['username'][0],
-                    """A user with this name already exists"""
+                    _("""A user with this name already exists""")
                         )
         
         self.assertIn('password', form3.errors)
         self.assertEqual(form3.errors['password'][0],
-                    """The password you entered is too short.
-                    It must support at least 3 characters."""
+                    _("""The password you entered is too short.
+                    It must support at least 3 characters.""")
                         )
         
 
@@ -295,14 +289,14 @@ class UserUpdateViewTest(TestCase):
         messages_list1 = list(resp2.context['messages'])
         self.assertEqual(len(messages_list1), 1)
         message = messages_list1[0]
-        self.assertEqual(message.message, 'User successfully changed')
+        self.assertEqual(message.message, _('User successfully changed'))
         self.assertEqual(message.tags, 'alert alert-success success')
 
         messages_list2 = list(resp3.context['messages'])
         self.assertEqual(len(messages_list2), 1)
         message = messages_list2[0]
         self.assertEqual(message.message,
-                         'You do not have permission to modify another user')
+                         _('You do not have permission to modify another user'))
         self.assertEqual(message.tags, 'alert alert-danger error')
 
         # Проверяем текст сообщения формы при неудачном обновлении
@@ -310,7 +304,7 @@ class UserUpdateViewTest(TestCase):
         # Проверяем наличие ошибок в поле
         self.assertIn('username', form1.errors)
         self.assertEqual(form1.errors['username'][0],
-                    """A user with this name already exists"""
+                    _('A user with this name already exists')
                         )
         
 
@@ -368,12 +362,12 @@ class UserDeleteViewTest(TestCase):
         messages_list1 = list(resp2.context['messages'])
         self.assertEqual(len(messages_list1), 1)
         message = messages_list1[0]
-        self.assertEqual(message.message, 'User deleted successfully')
+        self.assertEqual(message.message, _('User deleted successfully'))
         self.assertEqual(message.tags, 'alert alert-success success')
 
         messages_list2 = list(resp4.context['messages'])
         self.assertEqual(len(messages_list2), 1)
         message = messages_list2[0]
         self.assertEqual(message.message,
-                         'You do not have permission to modify another user')
+                         _('You do not have permission to modify another user'))
         self.assertEqual(message.tags, 'alert alert-danger error')
