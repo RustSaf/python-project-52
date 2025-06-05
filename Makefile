@@ -2,7 +2,7 @@ install:
 	pip install --upgrade pip && pip install uv
 
 test:
-	uv run pytest
+	 uv run python3 manage.py test
 
 ruff:
 	uv run ruff check
@@ -21,10 +21,6 @@ render-start:
 
 bootstrap:
 	uv pip install django-bootstrap5
-
-#PORT ?= 8000
-#start:
-#	uv run gunicorn -w 5 -b 0.0.0.0:$(PORT) task_manager.wsgi
 
 .PHONY:
 	install
