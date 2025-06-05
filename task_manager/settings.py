@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+import dj_database_url
 from dotenv import load_dotenv
 from django.utils.translation import gettext_lazy as _
 
@@ -94,12 +95,19 @@ WSGI_APPLICATION = "task_manager.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": os.path.join(BASE_DIR / "db.sqlite3"),
     }
 }
 
-# Replace the SQLite DATABASES configuration with PostgreSQL:
-# DATABASES = {
+# Переопределение настроек из переменной окружения DATABASE_URL:
+if 'DATABASE_URL' in os.environ:
+    db_config = dj_database_url.config(
+        default=os.environ['DATABASE_URL'],
+        conn_max_age=600,
+        ssl_require=os.environ.get('DJANGO_ENV') == 'production'
+    )
+    DATABASES['default'].update(db_config)
+#     DATABASES = {     
 #     'default': dj_database_url.config(
 #         # Replace this value with your local database's connection string.
 #         default='postgresql://root:${SECRET_KEY}@127.0.0.1:5432/task_manager',
