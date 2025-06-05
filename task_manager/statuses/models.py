@@ -8,9 +8,6 @@ class Statuses(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, verbose_name=_('Creation date')
         )
-    updated_at = models.DateTimeField(
-        auto_now=True, verbose_name=_('Update date')
-        )
 
     def __str__(self):
         return self.name
