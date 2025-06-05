@@ -26,11 +26,11 @@ class UsersModelTest(TestCase):
         field4_label = author._meta.get_field('password').verbose_name
         field5_label = author._meta.get_field('created_at').verbose_name
 
-        self.assertEquals(field1_label, _('Name'))
-        self.assertEquals(field2_label, _('Surname'))
-        self.assertEquals(field3_label, _('Username'))
-        self.assertEquals(field4_label, _('Password'))
-        self.assertEquals(field5_label, _('Creation date'))
+        self.assertEqual(field1_label, _('Name'))
+        self.assertEqual(field2_label, _('Surname'))
+        self.assertEqual(field3_label, _('Username'))
+        self.assertEqual(field4_label, _('Password'))
+        self.assertEqual(field5_label, _('Creation date'))
     
     # Проверяем ожидаемую длину текстовых меток модели
     def test_fields_max_length(self):
@@ -42,10 +42,10 @@ class UsersModelTest(TestCase):
         max_length3 = author._meta.get_field('username').max_length
         max_length4 = author._meta.get_field('password').max_length
         # Сравнить значение с ожидаемым результатом
-        self.assertEquals(max_length1, 150)
-        self.assertEquals(max_length2, 150)
-        self.assertEquals(max_length3, 150)
-        self.assertEquals(max_length4, 20)
+        self.assertEqual(max_length1, 150)
+        self.assertEqual(max_length2, 150)
+        self.assertEqual(max_length3, 150)
+        self.assertEqual(max_length4, 20)
 
     # Проверяем ожидаемую имена полей созданного объекта автора
     def test_object_name(self):
@@ -56,14 +56,14 @@ class UsersModelTest(TestCase):
         field1_name = author.first_name
         field2_name = author.last_name
         # Сравнить значение с ожидаемым результатом
-        self.assertEquals(expected_object_name, str(author))
-        self.assertEquals(field1_name, 'John')
-        self.assertEquals(field2_name, 'Snow')
+        self.assertEqual(expected_object_name, str(author))
+        self.assertEqual(field1_name, 'John')
+        self.assertEqual(field2_name, 'Snow')
 
     # Проверяем абсолютный URL, возвращаемый методом объекта
     def test_get_absolute_url(self):
         # Получение объекта для тестирования
         author = Users.objects.get(id=1)
         # Сравнить значение с ожидаемым результатом
-        self.assertEquals(author.get_absolute_url_update(), '/users/1/update/')
-        self.assertEquals(author.get_absolute_url_delete(), '/users/1/delete/')
+        self.assertEqual(author.get_absolute_url_update(), '/users/1/update/')
+        self.assertEqual(author.get_absolute_url_delete(), '/users/1/delete/')
