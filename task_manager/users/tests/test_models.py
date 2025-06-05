@@ -63,7 +63,7 @@ class UsersModelTest(TestCase):
     # Проверяем абсолютный URL, возвращаемый методом объекта
     def test_get_absolute_url(self):
         # Получение объекта для тестирования
-        author=Users.objects.get(id=1)
+        author = Users.objects.get(id=1)
         # Сравнить значение с ожидаемым результатом
         self.assertEquals(author.get_absolute_url_update(), '/users/1/update/')
         self.assertEquals(author.get_absolute_url_delete(), '/users/1/delete/')

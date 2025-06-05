@@ -186,7 +186,6 @@ class TaskUpdateViewTest(TestCase):
         )
         self.task.label.add(self.label1)      
 
-    
     def test_view_url_exists_at_desired_location(self):
 
         # Логинимся и получаем response
@@ -236,7 +235,8 @@ class TaskUpdateViewTest(TestCase):
         messages_list1 = list(resp2.context['messages'])
         self.assertEqual(len(messages_list1), 1)
         message = messages_list1[0]
-        self.assertEqual(message.message, _('The task was successfully modified'))
+        self.assertEqual(message.message, _(
+            'The task was successfully modified'))
         self.assertEqual(message.tags, 'alert alert-success success')
         
 
@@ -257,11 +257,11 @@ class TaskDeleteViewTest(TestCase):
         )
 
         self.status = Statuses.objects.create(
-            name='Status'
+            name='Status1'
             )
 
         self.label = Labels.objects.create(
-            name='Label'
+            name='Label1'
             )
 
         self.task1 = Tasks.objects.create(
@@ -290,7 +290,7 @@ class TaskDeleteViewTest(TestCase):
 
     def test_view_uses_correct_template_and_message(self):
         
-        # Логинимся под первым пользователем до и после удаления
+        # Логинимся под первым пользователем
         # и получаем response по id=1
         self.client.login(username='White_Wolf', password='12345')
         resp1 = self.client.get('/tasks/1/delete/')

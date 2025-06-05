@@ -21,16 +21,16 @@ class UserFormTest(TestCase):
         # Создаем экземпляр формы
         form = UserForm()
         # Сравнить значение с ожидаемым результатом
-        self.assertTrue(form.fields['first_name'].label == None or form.fields[
+        self.assertTrue(form.fields['first_name'].label is None or form.fields[
             'first_name'].label == _('First name'))
-        self.assertTrue(form.fields['last_name'].label == None or form.fields[
+        self.assertTrue(form.fields['last_name'].label is None or form.fields[
             'last_name'].label == _('Last name'))
-        self.assertTrue(form.fields['username'].label == None or form.fields[
+        self.assertTrue(form.fields['username'].label is None or form.fields[
             'username'].label == _('Username'))
-        self.assertTrue(form.fields['password'].label == None or form.fields[
+        self.assertTrue(form.fields['password'].label is None or form.fields[
             'password'].label == _('Password'))
         self.assertTrue(form.fields[
-            'password_confirm'].label == None or form.fields[
+            'password_confirm'].label is None or form.fields[
                 'password_confirm'].label == _('Password confirm'))
 
     # Проверяем текст который должен содержать поле help_text
@@ -195,7 +195,7 @@ class LoginUserFormTest(TestCase):
         # Создаем экземпляр формы
         form = LoginUserForm()
         # Сравнить значение с ожидаемым результатом
-        self.assertTrue(form.fields['username'].label == None or form.fields[
+        self.assertTrue(form.fields['username'].label is None or form.fields[
             'username'].label == _('Username'))
-        self.assertTrue(form.fields['password'].label == None or form.fields[
+        self.assertTrue(form.fields['password'].label is None or form.fields[
             'password'].label == _('Password'))
