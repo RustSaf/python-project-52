@@ -28,17 +28,17 @@ class UserCreateView(CreateView):
         form = UserForm(request.POST)  # Получаем данные формы из запроса
         if form.is_valid():  # Проверяем данные формы на корректность
             form.clean()
-#            form.save()  # Сохраняем форму
+            form.save()  # Сохраняем форму
 #            response = form.save(commit=False)  # Сохраняем форму
             username = form.cleaned_data.get('username', '')
-#            myuser = Users.objects.get(username=username)
             password = form.cleaned_data.get('password', '')
-            form.save()
             user = Users.objects.get(username=username)
+#            form.save()
+#            user = Users.objects.get(username=username)
             user.set_password(password)
-            form.save()
+#            form.save()
 #            response.username.set_password(password)
-#            myuser.save()
+            user.save()
             messages.success(
                 request,
                 _('User successfully registered'),
@@ -89,10 +89,10 @@ class UserUpdateView(LoginRequiredMixin, View):
         form = UserUpdateForm(request.POST, instance=user)
         if form.is_valid():
             form.clean()
-            password = form.cleaned_data.get('password', '')           
-#            user.save()
+            password = form.cleaned_data.get('password', '')                       
             user.set_password(password)
-            form.save() 
+#            form.save()
+            user.save()
             messages.success(
                 request,
                 _('User successfully changed'),
