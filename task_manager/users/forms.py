@@ -116,31 +116,25 @@ class UserForm(ModelForm):
             self.fields['username'].widget.attrs.update({
                 'class': 'form-control is-valid'})
 
-        if password != password_confirm:
+        if password is not None and password != password_confirm:
             self.fields['password_confirm'].widget.attrs.update({
                 'class': 'form-control is-invalid'})
             self.add_error(
                 'password_confirm',
                 _("The passwords entered do not match")
                 )
-        else:
-            self.fields['password_confirm'].widget.attrs.update({
-                'class': 'form-control is-valid'})
-            
-        if password:
-            if len(password) < 3:
-                self.fields['password'].widget.attrs.update({
-                    'class': 'form-control is-invalid'})
-                self.add_error(
-                    'password',
-                    _(
-                        """The password you entered is too short.
+        elif password is not None and len(password) < 3:
+            self.fields['password'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'password',
+                _("""The password you entered is too short.
                     It must support at least 3 characters."""
-                        )
                     )
-            else:
-                self.fields['password'].widget.attrs.update({
-                    'class': 'form-control is-valid'})
+                )
+        else:
+            self.fields['password'].widget.attrs.update({
+                'class': 'form-control is-valid'})       
 
         return cleaned_data
         

@@ -29,15 +29,11 @@ class UserCreateView(CreateView):
         if form.is_valid():  # Проверяем данные формы на корректность
             form.clean()
             form.save()  # Сохраняем форму
-#            response = form.save(commit=False)  # Сохраняем форму
             username = form.cleaned_data.get('username', '')
             password = form.cleaned_data.get('password', '')
             user = Users.objects.get(username=username)
-#            form.save()
-#            user = Users.objects.get(username=username)
             user.set_password(password)
 #            form.save()
-#            response.username.set_password(password)
             user.save()
             messages.success(
                 request,
