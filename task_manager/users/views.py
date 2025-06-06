@@ -30,7 +30,7 @@ class UserCreateView(CreateView):
             form.clean()
             form.save()  # Сохраняем форму
             username = form.cleaned_data.get('username', '')
-            password = form.cleaned_data.get('password', '')
+            password = form.cleaned_data.get('password1', '')
             user = Users.objects.get(username=username)
             user.set_password(password)
 #            form.save()
@@ -85,7 +85,7 @@ class UserUpdateView(LoginRequiredMixin, View):
         form = UserUpdateForm(request.POST, instance=user)
         if form.is_valid():
             form.clean()
-            password = form.cleaned_data.get('password', '')                       
+            password = form.cleaned_data.get('password1', '')                       
             user.set_password(password)
 #            form.save()
             user.save()

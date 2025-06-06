@@ -27,11 +27,11 @@ class UserFormTest(TestCase):
             'last_name'].label == _('Last name'))
         self.assertTrue(form.fields['username'].label is None or form.fields[
             'username'].label == _('Username'))
-        self.assertTrue(form.fields['password'].label is None or form.fields[
-            'password'].label == _('Password'))
+        self.assertTrue(form.fields['password1'].label is None or form.fields[
+            'password1'].label == _('Password'))
         self.assertTrue(form.fields[
-            'password_confirm'].label is None or form.fields[
-                'password_confirm'].label == _('Password confirm'))
+            'password2'].label is None or form.fields[
+                'password2'].label == _('Password confirm'))
 
     # Проверяем текст который должен содержать поле help_text
     def test_userform_fields_help_text(self):
@@ -42,10 +42,10 @@ class UserFormTest(TestCase):
             """Required field. No more than 150 characters.
             Letters, numbers and symbols only @/./+/-/_."""
             ))
-        self.assertEqual(form.fields['password'].help_text, _(
+        self.assertEqual(form.fields['password1'].help_text, _(
             "Your password must be at least 3 characters long"
             ))
-        self.assertEqual(form.fields['password_confirm'].help_text, _(
+        self.assertEqual(form.fields['password2'].help_text, _(
             "To confirm, please enter the password again"
             ))
 
@@ -60,18 +60,18 @@ class UserFormTest(TestCase):
         form_data1 = {'first_name': 'John',
                       'last_name': 'Snow',
                       'username': username_bad,
-                      'password': 'pass',
-                      'password_confirm': 'pass'}
+                      'password1': 'pass',
+                      'password2': 'pass'}
         form_data2 = {'first_name': 'John',
                       'last_name': 'Snow',
                       'username': username_good,
-                      'password': 'pass',
-                      'password_confirm': 'pass'}
+                      'password1': 'pass',
+                      'password2': 'pass'}
         form_data3 = {'first_name': 'John',
                       'last_name': 'Snow',
                       'username': username_exist,
-                      'password': 'pass',
-                      'password_confirm': 'pass'}
+                      'password1': 'pass',
+                      'password2': 'pass'}
         # Передаем данные в форму
         form1 = UserForm(data=form_data1)
         form2 = UserForm(data=form_data2)
@@ -92,18 +92,18 @@ class UserFormTest(TestCase):
         form_data1 = {'first_name': 'John',
                       'last_name': 'Snow',
                       'username': 'Aegon_Targaryen',
-                      'password': password_small, 
-                      'password_confirm': password_small}
+                      'password1': password_small, 
+                      'password2': password_small}
         form_data2 = {'first_name': 'John',
                       'last_name': 'Snow',
                       'username': 'Aegon_Targaryen',
-                      'password': password_good,
-                      'password_confirm': password_confirm_matches}
+                      'password1': password_good,
+                      'password2': password_confirm_matches}
         form_data3 = {'first_name': 'John',
                       'last_name': 'Snow',
                       'username': 'Aegon_Targaryen',
-                      'password': password_good,
-                      'password_confirm': password_confirm_unmatches}
+                      'password1': password_good,
+                      'password2': password_confirm_unmatches}
         # Передаем данные в форму
         form1 = UserForm(data=form_data1)
         form2 = UserForm(data=form_data2)
@@ -134,18 +134,18 @@ class UserUpdateFormTest(TestCase):
         form_data1 = {'first_name': 'John',
                       'last_name': 'Snow',
                       'username': username_bad,
-                      'password': 'pass',
-                      'password_confirm': 'pass'}
+                      'password1': 'pass',
+                      'password2': 'pass'}
         form_data2 = {'first_name': 'John',
                       'last_name': 'Snow',
                       'username': username_good,
-                      'password': 'pass',
-                      'password_confirm': 'pass'}
+                      'password1': 'pass',
+                      'password2': 'pass'}
         form_data3 = {'first_name': 'John',
                       'last_name': 'Snow',
                       'username': username_exist,
-                      'password': 'pass',
-                      'password_confirm': 'pass'}
+                      'password1': 'pass',
+                      'password2': 'pass'}
         # Передаем данные в форму
         form1 = UserUpdateForm(data=form_data1)
         form2 = UserUpdateForm(data=form_data2)
@@ -166,18 +166,18 @@ class UserUpdateFormTest(TestCase):
         form_data1 = {'first_name': 'John',
                       'last_name': 'Snow',
                       'username': 'Aegon_Targaryen',
-                      'password': password_small, 
-                      'password_confirm': password_small}
+                      'password1': password_small, 
+                      'password2': password_small}
         form_data2 = {'first_name': 'John',
                       'last_name': 'Snow',
                       'username': 'Aegon_Targaryen',
-                      'password': password_good,
-                      'password_confirm': password_confirm_matches}
+                      'password1': password_good,
+                      'password2': password_confirm_matches}
         form_data3 = {'first_name': 'John',
                       'last_name': 'Snow',
                       'username': 'Aegon_Targaryen',
-                      'password': password_good,
-                      'password_confirm': password_confirm_unmatches}
+                      'password1': password_good,
+                      'password2': password_confirm_unmatches}
         # Передаем данные в форму
         form1 = UserUpdateForm(data=form_data1)
         form2 = UserUpdateForm(data=form_data2)

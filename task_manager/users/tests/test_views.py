@@ -161,14 +161,14 @@ class UserCreateViewTest(TestCase):
     def test_view_uses_correct_template_and_form_and_message(self):
 
         data_good = {'first_name': 'John', 'last_name': 'Snow',
-                 'username': 'White_Wolf', 'password': '12345',
-                 'password_confirm': '12345'}
+                 'username': 'White_Wolf', 'password1': '12345',
+                 'password2': '12345'}
         data_bad1 = {'first_name': 'John', 'last_name': 'Snow',
-                 'username': 'White_Wolf~!', 'password': '12345',
-                 'password_confirm': '12345'}
+                 'username': 'White_Wolf~!', 'password1': '12345',
+                 'password2': '12345'}
         data_bad2 = {'first_name': 'John', 'last_name': 'Snow',
-                 'username': 'Aegon_Targaryen', 'password': '12',
-                 'password_confirm': '12'}
+                 'username': 'Aegon_Targaryen', 'password1': '12',
+                 'password2': '12'}
         resp1 = self.client.get(reverse('users:user_create'))
         resp2 = self.client.post(reverse('users:user_create'),
                                  data_good, follow=True)
@@ -218,8 +218,8 @@ class UserCreateViewTest(TestCase):
                     _("""A user with this name already exists""")
                         )
         
-        self.assertIn('password', form3.errors)
-        self.assertEqual(form3.errors['password'][0],
+        self.assertIn('password1', form3.errors)
+        self.assertEqual(form3.errors['password1'][0],
                     _("""The password you entered is too short.
                     It must support at least 3 characters.""")
                         )
@@ -252,8 +252,8 @@ class UserUpdateViewTest(TestCase):
     def test_view_uses_correct_template_and_form_and_message(self):
 
         data = {'first_name': 'John1', 'last_name': 'Snow1',
-                'username': 'White_Wolf', 'password': '12345',
-                'password_confirm': '12345'}
+                'username': 'White_Wolf', 'password1': '12345',
+                'password2': '12345'}
         
         # Логинимся под первым пользователем, получаем response по id=1
         self.client.login(username='White_Wolf', password='12345')
