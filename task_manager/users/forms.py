@@ -134,9 +134,9 @@ class UserForm(ModelForm):
                 self.add_error(
                     'password',
                     _(
-                      """The password you entered is too short.
+                        """The password you entered is too short.
                     It must support at least 3 characters."""
-                     )
+                        )
                     )
             else:
                 self.fields['password'].widget.attrs.update({
@@ -209,19 +209,20 @@ class UserUpdateForm(UserForm):
             self.fields['password_confirm'].widget.attrs.update({
                 'class': 'form-control is-valid'})
 
-        if len(password) < 3:
-            self.fields['password'].widget.attrs.update({
-                'class': 'form-control is-invalid'})
-            self.add_error(
-                'password',
-                _(
-                    """The password you entered is too short.
+        if password:
+            if len(password) < 3:
+                self.fields['password'].widget.attrs.update({
+                    'class': 'form-control is-invalid'})
+                self.add_error(
+                    'password',
+                    _(
+                        """The password you entered is too short.
                     It must support at least 3 characters."""
+                        )
                     )
-                )
-        else:
-            self.fields['password'].widget.attrs.update({
-                'class': 'form-control is-valid'})
+            else:
+                self.fields['password'].widget.attrs.update({
+                    'class': 'form-control is-valid'})
 
         return self.cleaned_data
 
