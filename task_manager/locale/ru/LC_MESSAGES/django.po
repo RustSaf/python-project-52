@@ -265,13 +265,6 @@ msgstr "Вы уверены, что хотите удалить"
 msgid "Yes, delete"
 msgstr "Да, удалить"
 
-#: task_manager/templates/labels/index.html:12
-#: task_manager/templates/statuses/index.html:12
-#: task_manager/templates/tasks/index.html:88
-#: task_manager/templates/users/index.html:11
-msgid "ID"
-msgstr "Индетификатор"
-
 #: task_manager/templates/labels/index.html:26
 #: task_manager/templates/statuses/index.html:26
 #: task_manager/templates/tasks/index.html:108
@@ -320,7 +313,7 @@ msgstr "Показать"
 
 #: task_manager/templates/users/create.html:26
 msgid "Register"
-msgstr "Регистрация"
+msgstr "Зарегистрировать"
 
 #: task_manager/templates/users/index.html:12 task_manager/users/forms.py:38
 #: task_manager/users/forms.py:47 task_manager/users/forms.py:250
