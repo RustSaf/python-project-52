@@ -215,7 +215,7 @@ class UserCreateViewTest(TestCase):
         
         self.assertIn('username', form2.errors)
         self.assertEqual(form2.errors['username'][0],
-                    _("""A user with this name already exists""")
+                    _("""A user with this name already exists.""")
                         )
         
         self.assertIn('password1', form3.errors)
@@ -304,7 +304,7 @@ class UserUpdateViewTest(TestCase):
         # Проверяем наличие ошибок в поле
         self.assertIn('username', form1.errors)
         self.assertEqual(form1.errors['username'][0],
-                    _('A user with this name already exists')
+                    _('A user with this name already exists.')
                         )
         
 

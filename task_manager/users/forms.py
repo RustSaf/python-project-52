@@ -1,9 +1,9 @@
 import re
-from urllib import request
 
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-from django.db.utils import IntegrityError
+
+# from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 
@@ -50,24 +50,30 @@ class UserForm(ModelForm):
             'aria-describedby': "id_username_helptext",
             }))
     password1 = forms.CharField(
-        required=True,
+        required=False,
         label=_("Password"),
-        help_text=_("Your password must be at least 3 characters long"),
+        help_text=_("Your password must be at least 3 characters long."),
+#        error_messages={'required': _("Required field.")},
         widget=forms.PasswordInput(attrs={
             'class': "form-control",
             'name': "password1",
+#            'required': "False",
+#            'required': _("Required field."),
             'autocomplete': "new-password",
             'placeholder': _("Password"),
             'aria-describedby': "id_password1_helptext",
             'id': "id_password1",
         }))
     password2 = forms.CharField(
-        required=True,
+        required=False,
         label=_("Password confirm"),
-        help_text=_("To confirm, please enter the password again"),
+        help_text=_("To confirm, please enter the password again."),
+#       error_messages={'required': _("Required field.")},
         widget=forms.PasswordInput(attrs={
             'class': "form-control",
             'name': "password2",
+#            'required': "False",
+#            'required': _("Required field."),
             'autocomplete': "new-password",
             'placeholder': _("Password confirmation"),
             'aria-describedby': "id_password2_helptext",
@@ -75,13 +81,14 @@ class UserForm(ModelForm):
         }))
     
     def clean(self):
+
         cleaned_data = super().clean()
         first_name = cleaned_data.get('first_name')
         last_name = cleaned_data.get('last_name')
         username = cleaned_data.get('username')
         password1 = cleaned_data.get('password1')
         password2 = cleaned_data.get('password2')
-        
+
         if first_name:
             self.fields['first_name'].widget.attrs.update({
                 'class': 'form-control is-valid'})
@@ -110,20 +117,37 @@ class UserForm(ModelForm):
                 'class': 'form-control is-invalid'})
             self.add_error(
                 'username',
-                _("A user with this name already exists")
+                _("A user with this name already exists.")
                 )
         else:
             self.fields['username'].widget.attrs.update({
                 'class': 'form-control is-valid'})
-
-        if password1 is not None and password1 != password2:
+            
+#        print(f"Первый пароль: {password1}")
+#        if not password1:            
+#            raise forms.ValidationError(_("Required field."))
+#            self.fields['password1'].widget.attrs.update({
+#                'class': 'form-control is-invalid'})
+#            self.add_error(
+#                'password1',
+#                _("Required field.")
+#               )
+#        elif not password2:
+#            raise forms.ValidationError(_("Required field."))
+#            self.fields['password2'].widget.attrs.update({
+#                'class': 'form-control is-invalid'})
+#            self.add_error(
+#                'password2',
+#                _("Required field.")
+#                )
+        if password1 != password2:
             self.fields['password2'].widget.attrs.update({
                 'class': 'form-control is-invalid'})
             self.add_error(
                 'password2',
-                _("The passwords entered do not match")
+                _("The passwords entered do not match.")
                 )
-        elif password1 is not None and len(password1) < 3:
+        elif len(password1) < 3:
             self.fields['password1'].widget.attrs.update({
                 'class': 'form-control is-invalid'})
             self.add_error(
@@ -145,6 +169,10 @@ class UserForm(ModelForm):
             'id', 'first_name', 'last_name',
             'username', 'password1', 'password2'
             ]
+#        error_messages = {
+#           'password1': {'required': _("Required field."),},
+#            'password2': {'required': _("Required field."),},
+#        }
 
 
 class UserUpdateForm(UserForm):
@@ -169,7 +197,7 @@ class UserUpdateForm(UserForm):
         pattern = re.compile(r'^[\w@,+-]{1,150}$')
         user_exists = username is not None and Users.objects.exclude(
             id=id).filter(username=username).exists()
-
+        
         if not pattern.match(username):
             self.fields['username'].widget.attrs.update({
                 'class': 'form-control is-invalid'})
@@ -186,20 +214,20 @@ class UserUpdateForm(UserForm):
                 'class': 'form-control is-invalid'})
             self.add_error(
                 'username',
-                _("A user with this name already exists")
+                _("A user with this name already exists.")
                 )
         else:
             self.fields['username'].widget.attrs.update({
                 'class': 'form-control is-valid'})
-            
-        if password1 is not None and password1 != password2:
+
+        if password1 != password2:
             self.fields['password2'].widget.attrs.update({
                 'class': 'form-control is-invalid'})
             self.add_error(
                 'password2',
-                _("The passwords entered do not match")
+                _("The passwords entered do not match.")
                 )
-        elif password1 is not None and len(password1) < 3:
+        elif len(password1) < 3:
             self.fields['password1'].widget.attrs.update({
                 'class': 'form-control is-invalid'})
             self.add_error(

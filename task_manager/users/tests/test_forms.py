@@ -43,10 +43,10 @@ class UserFormTest(TestCase):
             Letters, numbers and symbols only @/./+/-/_."""
             ))
         self.assertEqual(form.fields['password1'].help_text, _(
-            "Your password must be at least 3 characters long"
+            "Your password must be at least 3 characters long."
             ))
         self.assertEqual(form.fields['password2'].help_text, _(
-            "To confirm, please enter the password again"
+            "To confirm, please enter the password again."
             ))
 
     # Проверка правильности работы валидации формы по имени

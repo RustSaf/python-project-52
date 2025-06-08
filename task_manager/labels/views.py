@@ -35,12 +35,11 @@ class IndexView(LoginRequiredMixin, View):
 
 class LabelCreateView(LoginRequiredMixin, CreateView):
     
+    model = Labels
     form_class = LabelForm
     template_name = 'labels/create.html'
     success_url = reverse_lazy('labels:label_index')
-    extra_context = {
-        'name': _('Create a label'),
-        }
+    extra_context = {'name': _('Create a label')}
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -53,22 +52,29 @@ class LabelCreateView(LoginRequiredMixin, CreateView):
         return super(
             LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs): 
-        messages.success(
-            request,
-            _('Label created successfully'),
-            extra_tags='alert alert-success'
-            )
-        return super().post(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        form = LabelForm(request.POST)  # Получаем данные формы из запроса
+        if form.is_valid():  # Проверяем данные формы на корректность
+            form.clean()
+            form.save()
+            messages.success(
+                request,
+                _('Label created successfully'),
+                extra_tags='alert alert-success'
+                )
+            return redirect('labels:label_index')
+        return render(request, 'labels/create.html', context={
+            'form': form,
+            })
 
 
 class LabelUpdateView(LoginRequiredMixin, UpdateView):
     
     model = Labels
-    form_class = LabelForm
+    form_class = LabelUpdateForm
     template_name = 'labels/update.html'
     success_url = reverse_lazy('labels:label_index')
-    extra_context = {'name': _('Change label'), }
+    extra_context = {'name': _('Changing a label')}
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -81,13 +87,24 @@ class LabelUpdateView(LoginRequiredMixin, UpdateView):
         return super(
             LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs): 
-        messages.success(
-            request,
-            _('The label has been changed successfully'),
-            extra_tags='alert alert-success'
-            )
-        return super().post(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        form = LabelUpdateForm(request.POST)  # Получаем данные формы из запроса
+        label_id = kwargs.get('pk') 
+        label = Labels.objects.get(id=label_id)
+        form = LabelUpdateForm(request.POST, instance=label)
+        if form.is_valid():  # Проверяем данные формы на корректность
+            form.clean()
+            form.save()
+            messages.success(
+                request,
+                _('The label has been changed successfully'),
+                extra_tags='alert alert-success'
+                )
+            return redirect('labels:label_index')
+        return render(request, 'labels/update.html', context={
+            'form': form,
+            'status_id': label_id
+            })
 
 
 class LabelDeleteView(LoginRequiredMixin, DeleteView):

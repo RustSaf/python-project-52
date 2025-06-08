@@ -35,12 +35,11 @@ class IndexView(LoginRequiredMixin, View):
 
 class StatusCreateView(LoginRequiredMixin, CreateView):
     
+    model = Statuses
     form_class = StatusForm
     template_name = 'statuses/create.html'
     success_url = reverse_lazy('statuses:status_index')
-    extra_context = {
-        'name': _('Create status'),
-        }
+    extra_context = {'name': _('Create status')}
     
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -53,22 +52,29 @@ class StatusCreateView(LoginRequiredMixin, CreateView):
         return super(
             LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
     
-    def post(self, request, *args, **kwargs): 
-        messages.success(
-            request,
-            _('Status created successfully'),
-            extra_tags='alert alert-success'
-            )
-        return super().post(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        form = StatusForm(request.POST)  # Получаем данные формы из запроса
+        if form.is_valid():  # Проверяем данные формы на корректность
+            form.clean()
+            form.save()
+            messages.success(
+                request,
+                _('Status created successfully'),
+                extra_tags='alert alert-success'
+                )
+            return redirect('statuses:status_index')
+        return render(request, 'statuses/create.html', context={
+            'form': form,
+            })
 
 
 class StatusUpdateView(LoginRequiredMixin, UpdateView):
     
     model = Statuses
-    form_class = StatusForm
+    form_class = StatusUpdateForm
     template_name = 'statuses/update.html'
     success_url = reverse_lazy('statuses:status_index')
-    extra_context = {'name': _('Change of status'), }
+    extra_context = {'name': _('Changing status'), }
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -81,13 +87,24 @@ class StatusUpdateView(LoginRequiredMixin, UpdateView):
         return super(
             LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs): 
-        messages.success(
-            request,
-            _('Status changed successfully'),
-            extra_tags='alert alert-success'
-            )
-        return super().post(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        form = StatusUpdateForm(request.POST)
+        status_id = kwargs.get('pk') 
+        status = Statuses.objects.get(id=status_id)
+        form = StatusUpdateForm(request.POST, instance=status)
+        if form.is_valid():  # Проверяем данные формы на корректность
+            form.clean()
+            form.save()
+            messages.success(
+                request,
+                _('Status changed successfully'),
+                extra_tags='alert alert-success'
+                )
+            return redirect('statuses:status_index')
+        return render(request, 'statuses/update.html', context={
+            'form': form,
+            'status_id': status_id
+            })
 
 
 class StatusDeleteView(LoginRequiredMixin, DeleteView):

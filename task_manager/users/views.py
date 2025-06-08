@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views import View
@@ -21,11 +22,19 @@ class IndexView(View):
 
 class UserCreateView(CreateView):
 
+    model = Users
     form_class = UserForm
     template_name = 'users/create.html'
+    extra_context = {'name': _('Registration')}
       
     def post(self, request, *args, **kwargs):
         form = UserForm(request.POST)  # Получаем данные формы из запроса
+#        if not form.password1 or not form.password2:
+#            return render(request, 'users/create.html', context={
+#                'name': _('Registration'),
+#                'form': form,
+#                'empty_pass': _("Required field.")
+#                })
         if form.is_valid():  # Проверяем данные формы на корректность
             form.clean()
             form.save()  # Сохраняем форму
@@ -33,7 +42,6 @@ class UserCreateView(CreateView):
             password = form.cleaned_data.get('password1', '')
             user = Users.objects.get(username=username)
             user.set_password(password)
-#            form.save()
             user.save()
             messages.success(
                 request,
@@ -43,7 +51,7 @@ class UserCreateView(CreateView):
             return redirect('/login')
         return render(request, 'users/create.html', context={
             'name': _('Registration'),
-            'form': form,
+            'form': form
             }) 
 
 
@@ -67,7 +75,7 @@ class UserUpdateView(LoginRequiredMixin, View):
             form = UserUpdateForm(instance=user)       
             return render(
                 request, 'users/update.html', context={
-                    'name': _('Change user'),
+                    'name': _('Changing user'),
                     'form': form,
                     'user_id': user_id,
                     })        
@@ -85,9 +93,8 @@ class UserUpdateView(LoginRequiredMixin, View):
         form = UserUpdateForm(request.POST, instance=user)
         if form.is_valid():
             form.clean()
-            password = form.cleaned_data.get('password1', '')                       
+            password = form.cleaned_data.get('password1', '')
             user.set_password(password)
-#            form.save()
             user.save()
             messages.success(
                 request,
@@ -97,8 +104,8 @@ class UserUpdateView(LoginRequiredMixin, View):
             return redirect('/users')
 
         return render(
-            request, 'users/update.html', {
-                'name': _('Change user'),
+            request, 'users/update.html', context={
+                'name': _('Changing user'),
                 'form': form,
                 'user_id': user_id,
                 })
@@ -122,7 +129,7 @@ class UserDeleteView(LoginRequiredMixin, View):
         if user_id == self.request.user.id:
             user = Users.objects.get(id=user_id)
             return render(request, 'users/delete.html', context={
-                'name': _('Delete user'),
+                'name': _('Deleting user'),
                 'user': user,
             })       
         else:

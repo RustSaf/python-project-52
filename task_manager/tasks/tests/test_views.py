@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
-from task_manager.tasks.forms import TaskForm
+from task_manager.tasks.forms import TaskForm, TaskUpdateForm
 from task_manager.tasks.models import Labels, Statuses, Tasks, Users
 
 
@@ -119,16 +119,22 @@ class TaskCreateViewTest(TestCase):
         data = {'name': 'Task1', 'discription': 'Discription for Task1',
                  'status': self.status.pk, 'executor': self.author2.pk,
                  'label': [self.label1.pk, self.label2.pk]}
+        data_exist = {'name': 'Task1', 'discription': 'Discription for Task1',
+                 'status': self.status.pk, 'executor': self.author1.pk,
+                 'label': self.label1.pk}
 
         # Логинимся и получаем response
         self.client.login(username='White_Wolf', password='12345')
         resp1 = self.client.get(reverse('tasks:task_create'))
         resp2 = self.client.post(reverse('tasks:task_create'),
                                  data, follow=True)
+        resp3 = self.client.post(reverse('tasks:task_create'),
+                                 data_exist, follow=True)
         
         # Проверка ответа на запрос
         self.assertEqual(resp1.status_code, 200)
         self.assertEqual(resp2.status_code, 200)
+        self.assertEqual(resp3.status_code, 200)
 
         # Проверка корректности template и формы
         self.assertTemplateUsed(resp1, 'tasks/create.html')
@@ -144,6 +150,14 @@ class TaskCreateViewTest(TestCase):
         message = messages_list1[0]
         self.assertEqual(message.message, _('Task created successfully'))
         self.assertEqual(message.tags, 'alert alert-success success')
+
+        # Проверяем текст сообщения формы при неудачном обновлении
+        form1 = resp3.context['form']
+        # Проверяем наличие ошибок в поле
+        self.assertIn('name', form1.errors)
+        self.assertEqual(form1.errors['name'][0],
+                    _('A task with this name already exists.')
+                        )
         
 
 class TaskUpdateViewTest(TestCase):
@@ -178,13 +192,21 @@ class TaskUpdateViewTest(TestCase):
             name='Label2'
             )
 
-        self.task = Tasks.objects.create(
+        self.task1 = Tasks.objects.create(
             author='White_Wolf', 
             name='Task1', discription='Discription for Task1',
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
         )
-        self.task.label.add(self.label1)      
+        self.task1.label.add(self.label1)
+
+        self.task2 = Tasks.objects.create(
+            author='White_Wolf', 
+            name='Task4', discription='Discription for Task4',
+            status=Statuses.objects.get(id=1),
+            executor=Users.objects.get(id=1),
+        )
+        self.task2.label.add(self.label1)      
 
     def test_view_url_exists_at_desired_location(self):
 
@@ -202,6 +224,9 @@ class TaskUpdateViewTest(TestCase):
         data2 = {'name': 'Task3', 'discription': 'Discription for Task3',
                  'status': self.status1.pk, 'executor': self.author2.pk,
                  'label': [self.label1.pk, self.label2.pk]}
+        data_exist = {'name': 'Task4', 'discription': 'Discription for Task3',
+                 'status': self.status2.pk, 'executor': self.author1.pk,
+                 'label': self.label1.pk}
             
         # Логинимся под первым пользователем, получаем response по id=1,
         # обновляем данные задачи
@@ -213,12 +238,14 @@ class TaskUpdateViewTest(TestCase):
         self.client.login(username='Born_of_the_Storm', password='12345')
         resp3 = self.client.get('/tasks/1/update/')
         resp4 = self.client.post('/tasks/1/update/', data2, follow=True)
+        resp5 = self.client.post('/tasks/1/update/', data_exist, follow=True)
 
         # Проверка ответа на запрос
         self.assertEqual(resp1.status_code, 200)
         self.assertEqual(resp2.status_code, 200)
         self.assertEqual(resp3.status_code, 200)
         self.assertEqual(resp4.status_code, 200)
+        self.assertEqual(resp5.status_code, 200)
 
         # Проверка корректности template и формы
         self.assertTemplateUsed(resp1, 'tasks/update.html')
@@ -229,7 +256,7 @@ class TaskUpdateViewTest(TestCase):
         self.assertTemplateUsed(resp4, 'tasks/index.html')
         self.assertIn('form', resp1.context)
         self.assertContains(resp1, '<form')
-        self.assertIsInstance(resp1.context['form'], TaskForm)
+        self.assertIsInstance(resp1.context['form'], TaskUpdateForm)
 
         # Должно быть хотябы одно сообщение, смотрим текст сообщения и тэг
         messages_list1 = list(resp2.context['messages'])
@@ -238,6 +265,14 @@ class TaskUpdateViewTest(TestCase):
         self.assertEqual(message.message, _(
             'The task was successfully modified'))
         self.assertEqual(message.tags, 'alert alert-success success')
+
+        # Проверяем текст сообщения формы при неудачном обновлении
+        form1 = resp5.context['form']
+        # Проверяем наличие ошибок в поле
+        self.assertIn('name', form1.errors)
+        self.assertEqual(form1.errors['name'][0],
+                    _('A task with this name already exists.')
+                        )
         
 
 class TaskDeleteViewTest(TestCase):

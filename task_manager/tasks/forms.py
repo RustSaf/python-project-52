@@ -7,6 +7,26 @@ from .models import Tasks
 
 class TaskForm(ModelForm):
 
+    def clean(self):
+
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        task_exists = name is not None and Tasks.objects.filter(
+            name=name).exists()
+        
+        if task_exists:
+            self.fields['name'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'name',
+                _("A task with this name already exists.")
+                )
+        else:
+            self.fields['name'].widget.attrs.update({
+                'class': 'form-control is-valid'})
+        
+        return cleaned_data
+
     class Meta:
         model = Tasks
         fields = [
@@ -20,7 +40,7 @@ class TaskForm(ModelForm):
             'discription': _("Discription"),
             'status': _("Status"),
             'executor': _("Executor"),
-            'label': _("Label")
+            'label': _("Labels")
         }
         widgets = {
             'name': forms.TextInput(attrs={
@@ -53,9 +73,32 @@ class TaskForm(ModelForm):
                 'id': "id_executor",
             }),
             'label': forms.SelectMultiple(attrs={
-                'name': "label",
+                'name': "labels",
                 'class': "form-select",
-                'placeholder': _("Label"),
+                'placeholder': _("Labels"),
                 'id': "id_label",
             })
         }
+
+
+class TaskUpdateForm(TaskForm):
+
+    def clean(self):
+
+        id = self.instance.pk
+        name = self.cleaned_data.get('name')
+        task_exists = name is not None and Tasks.objects.exclude(
+            id=id).filter(name=name).exists()
+        
+        if task_exists:
+            self.fields['name'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'name',
+                _("A task with this name already exists.")
+                )
+        else:
+            self.fields['name'].widget.attrs.update({
+                'class': 'form-control is-valid'})
+        
+        return self.cleaned_data

@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from task_manager.labels.forms import LabelForm
+from task_manager.labels.forms import LabelForm, LabelUpdateForm
 from task_manager.tasks.models import Labels, Statuses, Tasks, Users
 
 
@@ -98,16 +98,19 @@ class LabelCreateViewTest(TestCase):
     def test_view_uses_correct_template_and_form_and_message(self):
 
         data = {'name': 'Label1'}
+        data_exist = {'name': 'Label1'}
 
         # Логинимся и получаем response
         self.client.login(username='White_Wolf', password='12345')
         resp1 = self.client.get(reverse('labels:label_create'))
         resp2 = self.client.post(reverse('labels:label_create'),
                                  data, follow=True)
-        
+        resp3 = self.client.post(reverse('labels:label_create'),
+                                 data_exist, follow=True)
         # Проверка ответа на запрос
         self.assertEqual(resp1.status_code, 200)
         self.assertEqual(resp2.status_code, 200)
+        self.assertEqual(resp3.status_code, 200)
 
         # Проверка корректности template и формы
         self.assertTemplateUsed(resp1, 'labels/create.html')
@@ -123,6 +126,14 @@ class LabelCreateViewTest(TestCase):
         message = messages_list[0]
         self.assertEqual(message.message, _('Label created successfully'))
         self.assertEqual(message.tags, 'alert alert-success success')
+
+        # Проверяем текст сообщения формы при неудачном обновлении
+        form1 = resp3.context['form']
+        # Проверяем наличие ошибок в поле
+        self.assertIn('name', form1.errors)
+        self.assertEqual(form1.errors['name'][0],
+                    _('A label with this name already exists.')
+                        )
         
 
 class LabelUpdateViewTest(TestCase):
@@ -145,17 +156,21 @@ class LabelUpdateViewTest(TestCase):
             name='Status1'
             )
 
-        self.label = Labels.objects.create(
+        self.label1 = Labels.objects.create(
             name='Label1'
             )
 
+        self.label2 = Labels.objects.create(
+            name='Label3'
+            )
+        
         self.task = Tasks.objects.create(
             author='White_Wolf', 
             name='Task1', discription='Discription for Task1',
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
         )
-        self.task.label.add(self.label)      
+        self.task.label.add(self.label1)      
  
     def test_view_url_exists_at_desired_location(self):
 
@@ -168,16 +183,19 @@ class LabelUpdateViewTest(TestCase):
     def test_view_uses_correct_template_and_form_and_message(self):
 
         data = {'name': 'Label2'}
+        data_exist = {'name': 'Label3'}
             
         # Логинимся под вторым пользователем, получаем response по id=1,
         # обновляем данные статуса
         self.client.login(username='White_Wolf', password='12345')
         resp1 = self.client.get('/labels/1/update/')
         resp2 = self.client.post('/labels/1/update/', data, follow=True)
+        resp3 = self.client.post('/labels/1/update/', data_exist, follow=True)
 
         # Проверка ответа на запрос
         self.assertEqual(resp1.status_code, 200)
         self.assertEqual(resp2.status_code, 200)
+        self.assertEqual(resp3.status_code, 200)
 
         # Проверка корректности template и формы
         self.assertTemplateUsed(resp1, 'labels/update.html')
@@ -185,7 +203,7 @@ class LabelUpdateViewTest(TestCase):
         self.assertTemplateUsed(resp2, 'labels/index.html')
         self.assertIn('form', resp1.context)
         self.assertContains(resp1, '<form')
-        self.assertIsInstance(resp1.context['form'], LabelForm)
+        self.assertIsInstance(resp1.context['form'], LabelUpdateForm)
 
         # Должно быть хотябы одно сообщение, смотрим текст сообщения и тэг
         messages_list = list(resp2.context['messages'])
@@ -194,6 +212,14 @@ class LabelUpdateViewTest(TestCase):
         self.assertEqual(message.message, _(
             'The label has been changed successfully'))
         self.assertEqual(message.tags, 'alert alert-success success')
+
+        # Проверяем текст сообщения формы при неудачном обновлении
+        form1 = resp3.context['form']
+        # Проверяем наличие ошибок в поле
+        self.assertIn('name', form1.errors)
+        self.assertEqual(form1.errors['name'][0],
+                    _('A label with this name already exists.')
+                        )
         
 
 class LabelDeleteViewTest(TestCase):

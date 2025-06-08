@@ -5,16 +5,21 @@
 
 {% block context %}
 
-<form action="{# url 'tasks:task_update' pk=form.id #}" method="post">
+<form action="{# url 'tasks:task_update' pk=task_id #}" method="post">
   {% csrf_token %}
   {% for field in form.visible_fields %}
     <div class="mb-3">
       <label class="form-label" for="{{ field.id }}">{% translate field.label %}</label>
       {{ field }}
+      {% for error in field.errors %}
+      <div class="invalid-feedback">
+        {{error}}
+      </div>
+      {% endfor %}
     </div>
   {% endfor %}
 
-  <input class="btn btn-primary" type="submit" value="{% translate 'Update' %}">
+  <input class="btn btn-primary" type="submit" value="{% translate 'Change' %}">
 </form>
 
 {% endblock %}

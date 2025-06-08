@@ -73,8 +73,10 @@ class IndexView(LoginRequiredMixin, View):
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
     
+    model = Tasks
     form_class = TaskForm
     template_name = 'tasks/create.html'
+    extra_context = {'name': _('Create a task')}
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -90,6 +92,7 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
     def post(self, request, *args, **kwargs):
         form = TaskForm(request.POST)  # Получаем данные формы из запроса
         if form.is_valid():  # Проверяем данные формы на корректность
+            form.clean()
             response = form.save(commit=False)
             response.author = request.user
             response.save()
@@ -100,7 +103,6 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
                 )
             return redirect('tasks:task_index')
         return render(request, 'tasks/create.html', context={
-            'name': _('Create a task'),
             'form': form,
             })
 
@@ -108,8 +110,9 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
 class TaskUpdateView(LoginRequiredMixin, UpdateView):
     
     model = Tasks
-    form_class = TaskForm
+    form_class = TaskUpdateForm
     template_name = 'tasks/update.html'
+    extra_context = {'name': _('Changing a task')}
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -123,21 +126,26 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
             LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
     
     def post(self, request, *args, **kwargs):
-        form = TaskForm(request.POST)  # Получаем данные формы из запроса
+        form = TaskUpdateForm(request.POST)  # Получаем данные формы из запроса
         task_id = kwargs.get('pk') 
         task = Tasks.objects.get(id=task_id)
+        author = task.author
+        form = TaskUpdateForm(request.POST, instance=task)
         if form.is_valid():  # Проверяем данные формы на корректность
-            response = form.save(commit=False)
-            response.id = task_id
-            response.author = task.author
-            response.created_at = task.created_at
+            form.clean()
             form.save()
+            task.author = author
+            task.save()
             messages.success(
                 request,
                 _('The task was successfully modified'),
                 extra_tags='alert alert-success'
                 )
             return redirect('tasks:task_index')
+        return render(request, 'tasks/update.html', context={
+                'form': form,
+                'task_id': task_id,
+                })
 
 
 class TaskDeleteView(LoginRequiredMixin, DeleteView):
