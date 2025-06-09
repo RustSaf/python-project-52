@@ -2,8 +2,6 @@ import re
 
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-
-# from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 
@@ -52,13 +50,11 @@ class UserForm(ModelForm):
     password1 = forms.CharField(
         required=False,
         label=_("Password"),
+        empty_value=None,
         help_text=_("Your password must be at least 3 characters long."),
-#        error_messages={'required': _("Required field.")},
         widget=forms.PasswordInput(attrs={
             'class': "form-control",
             'name': "password1",
-#            'required': "False",
-#            'required': _("Required field."),
             'autocomplete': "new-password",
             'placeholder': _("Password"),
             'aria-describedby': "id_password1_helptext",
@@ -67,13 +63,11 @@ class UserForm(ModelForm):
     password2 = forms.CharField(
         required=False,
         label=_("Password confirm"),
+        empty_value=None,
         help_text=_("To confirm, please enter the password again."),
-#       error_messages={'required': _("Required field.")},
         widget=forms.PasswordInput(attrs={
             'class': "form-control",
             'name': "password2",
-#            'required': "False",
-#            'required': _("Required field."),
             'autocomplete': "new-password",
             'placeholder': _("Password confirmation"),
             'aria-describedby': "id_password2_helptext",
@@ -123,24 +117,34 @@ class UserForm(ModelForm):
             self.fields['username'].widget.attrs.update({
                 'class': 'form-control is-valid'})
             
-#        print(f"Первый пароль: {password1}")
-#        if not password1:            
-#            raise forms.ValidationError(_("Required field."))
-#            self.fields['password1'].widget.attrs.update({
-#                'class': 'form-control is-invalid'})
-#            self.add_error(
-#                'password1',
-#                _("Required field.")
-#               )
-#        elif not password2:
-#            raise forms.ValidationError(_("Required field."))
-#            self.fields['password2'].widget.attrs.update({
-#                'class': 'form-control is-invalid'})
-#            self.add_error(
-#                'password2',
-#                _("Required field.")
-#                )
-        if password1 != password2:
+        if not password1 and not password2:
+            self.fields['password1'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'password1',
+                _("Required field.")
+                )
+            self.fields['password2'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'password2',
+                _("Required field.")
+                )
+        elif not password1:            
+            self.fields['password1'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'password1',
+                _("Required field.")
+               )
+        elif not password2:
+            self.fields['password2'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'password2',
+                _("Required field.")
+                )
+        elif password1 != password2:
             self.fields['password2'].widget.attrs.update({
                 'class': 'form-control is-invalid'})
             self.add_error(
@@ -169,10 +173,6 @@ class UserForm(ModelForm):
             'id', 'first_name', 'last_name',
             'username', 'password1', 'password2'
             ]
-#        error_messages = {
-#           'password1': {'required': _("Required field."),},
-#            'password2': {'required': _("Required field."),},
-#        }
 
 
 class UserUpdateForm(UserForm):
@@ -220,7 +220,34 @@ class UserUpdateForm(UserForm):
             self.fields['username'].widget.attrs.update({
                 'class': 'form-control is-valid'})
 
-        if password1 != password2:
+        if not password1 and not password2:
+            self.fields['password1'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'password1',
+                _("Required field.")
+                )
+            self.fields['password2'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'password2',
+                _("Required field.")
+                )
+        elif not password1:            
+            self.fields['password1'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'password1',
+                _("Required field.")
+               )
+        elif not password2:
+            self.fields['password2'].widget.attrs.update({
+                'class': 'form-control is-invalid'})
+            self.add_error(
+                'password2',
+                _("Required field.")
+                )
+        elif password1 != password2:
             self.fields['password2'].widget.attrs.update({
                 'class': 'form-control is-invalid'})
             self.add_error(
@@ -260,13 +287,13 @@ class LoginUserForm(AuthenticationForm):
         required=True,
         label=_("Password"),
         widget=forms.PasswordInput(attrs={
-            'name': "password1",
+            'name': "password",
             'class': "form-control",
             'placeholder': _("Password"),
-            'id': "id_password1",
+            'id': "id_password",
         }))
     
     class Meta:
 
         model = Users
-        fields = ['username', 'password1']
+        fields = ['username', 'password']

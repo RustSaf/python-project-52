@@ -29,12 +29,6 @@ class UserCreateView(CreateView):
       
     def post(self, request, *args, **kwargs):
         form = UserForm(request.POST)  # Получаем данные формы из запроса
-#        if not form.password1 or not form.password2:
-#            return render(request, 'users/create.html', context={
-#                'name': _('Registration'),
-#                'form': form,
-#                'empty_pass': _("Required field.")
-#                })
         if form.is_valid():  # Проверяем данные формы на корректность
             form.clean()
             form.save()  # Сохраняем форму

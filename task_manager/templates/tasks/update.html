@@ -9,7 +9,7 @@
   {% csrf_token %}
   {% for field in form.visible_fields %}
     <div class="mb-3">
-      <label class="form-label" for="{{ field.id }}">{% translate field.label %}</label>
+      <label class="form-label" for="{{ field.id_for_label }}">{% translate field.label %}</label>
       {{ field }}
       {% for error in field.errors %}
       <div class="invalid-feedback">

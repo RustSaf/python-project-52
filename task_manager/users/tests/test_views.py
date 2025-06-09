@@ -169,6 +169,9 @@ class UserCreateViewTest(TestCase):
         data_bad2 = {'first_name': 'John', 'last_name': 'Snow',
                  'username': 'Aegon_Targaryen', 'password1': '12',
                  'password2': '12'}
+        data_bad3 = {'first_name': 'John', 'last_name': 'Snow',
+                 'username': 'Aegon_Targaryen', 'password1': '123',
+                 'password2': ''}
         resp1 = self.client.get(reverse('users:user_create'))
         resp2 = self.client.post(reverse('users:user_create'),
                                  data_good, follow=True)
@@ -178,13 +181,16 @@ class UserCreateViewTest(TestCase):
                                  data_good, follow=True)
         resp5 = self.client.post(reverse('users:user_create'),
                                  data_bad2, follow=True)
-        
+        resp6 = self.client.post(reverse('users:user_create'),
+                                 data_bad3, follow=True)
+
         # Проверка ответа на запрос
         self.assertEqual(resp1.status_code, 200)
         self.assertEqual(resp2.status_code, 200)
         self.assertEqual(resp3.status_code, 200)
         self.assertEqual(resp4.status_code, 200)
         self.assertEqual(resp5.status_code, 200)
+        self.assertEqual(resp6.status_code, 200)
 
         # Проверка корректности template и формы
         self.assertTemplateUsed(resp1, 'users/create.html')
@@ -205,6 +211,7 @@ class UserCreateViewTest(TestCase):
         form1 = resp3.context['form']
         form2 = resp4.context['form']
         form3 = resp5.context['form']
+        form4 = resp6.context['form']
         # Проверяем наличие ошибок в поле
         self.assertIn('username', form1.errors)
         self.assertEqual(form1.errors['username'][0],
@@ -212,16 +219,18 @@ class UserCreateViewTest(TestCase):
                     It can only contain letters,
                     numbers and @/./+/-/_ signs.""")
                         )
-        
         self.assertIn('username', form2.errors)
         self.assertEqual(form2.errors['username'][0],
                     _("""A user with this name already exists.""")
                         )
-        
         self.assertIn('password1', form3.errors)
         self.assertEqual(form3.errors['password1'][0],
                     _("""The password you entered is too short.
                     It must support at least 3 characters.""")
+                        )
+        self.assertIn('password2', form4.errors)
+        self.assertEqual(form4.errors['password2'][0],
+                    _("Required field.")
                         )
         
 
