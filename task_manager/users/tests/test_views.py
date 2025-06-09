@@ -92,7 +92,7 @@ class LoginUserViewTest(TestCase):
 
         # Проверка что пользователь залогинился/незалогинился и 
         # выдается нужный tamplate
-        self.assertEqual(str(resp2.context['user']), 'White_Wolf')
+        self.assertEqual(str(resp2.context['user'].username), 'White_Wolf')
         self.assertRedirects(resp2, '/')
         self.assertTemplateUsed(resp2, 'index.html')
         self.assertTemplateUsed(resp3, 'login.html')

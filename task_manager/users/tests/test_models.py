@@ -52,7 +52,7 @@ class UsersModelTest(TestCase):
         # Получение объекта для тестирования
         author = Users.objects.get(id=1)
         # Получение значения поля
-        expected_object_name = author.username
+        expected_object_name = author.get_full_name()
         field1_name = author.first_name
         field2_name = author.last_name
         # Сравнить значение с ожидаемым результатом
