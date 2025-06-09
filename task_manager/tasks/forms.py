@@ -59,18 +59,16 @@ class TaskForm(ModelForm):
                 'id': "id_discription",
             }),
             'status': forms.Select(attrs={
+                'required': "True",
                 'class': "form-select",
-                'placeholder': _("Status"),
                 'id': "id_status",
             }),
             'executor': forms.Select(attrs={
                 'class': "form-select",
-                'placeholder': _("Executor"),
                 'id': "id_executor",
             }),
             'labels': forms.SelectMultiple(attrs={
                 'class': "form-select",
-                'placeholder': _("Labels"),
                 'id': "id_labels",
             })
         }
