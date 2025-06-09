@@ -35,7 +35,7 @@ class IndexView(LoginRequiredMixin, View):
 
         status_id = request.GET.get('status')
         executor_id = request.GET.get('executor')
-        label_id = request.GET.get('label')
+        label_id = request.GET.get('labels')
         is_self_tasks = request.GET.get('self_tasks')
 
         status = Statuses.objects.get(id=status_id) if status_id else None

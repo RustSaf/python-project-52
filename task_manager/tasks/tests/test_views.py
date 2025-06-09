@@ -118,10 +118,10 @@ class TaskCreateViewTest(TestCase):
 
         data = {'name': 'Task1', 'discription': 'Discription for Task1',
                  'status': self.status.pk, 'executor': self.author2.pk,
-                 'label': [self.label1.pk, self.label2.pk]}
+                 'labels': [self.label1.pk, self.label2.pk]}
         data_exist = {'name': 'Task1', 'discription': 'Discription for Task1',
                  'status': self.status.pk, 'executor': self.author1.pk,
-                 'label': self.label1.pk}
+                 'labels': self.label1.pk}
 
         # Логинимся и получаем response
         self.client.login(username='White_Wolf', password='12345')
@@ -198,7 +198,7 @@ class TaskUpdateViewTest(TestCase):
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
         )
-        self.task1.label.add(self.label1)
+        self.task1.labels.add(self.label1)
 
         self.task2 = Tasks.objects.create(
             author='White_Wolf', 
@@ -206,7 +206,7 @@ class TaskUpdateViewTest(TestCase):
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
         )
-        self.task2.label.add(self.label1)      
+        self.task2.labels.add(self.label1)      
 
     def test_view_url_exists_at_desired_location(self):
 
@@ -220,13 +220,13 @@ class TaskUpdateViewTest(TestCase):
 
         data1 = {'name': 'Task2', 'discription': 'Discription for Task2',
                  'status': self.status2.pk, 'executor': self.author2.pk,
-                 'label': self.label2.pk}
+                 'labels': self.label2.pk}
         data2 = {'name': 'Task3', 'discription': 'Discription for Task3',
                  'status': self.status1.pk, 'executor': self.author2.pk,
-                 'label': [self.label1.pk, self.label2.pk]}
+                 'labels': [self.label1.pk, self.label2.pk]}
         data_exist = {'name': 'Task4', 'discription': 'Discription for Task3',
                  'status': self.status2.pk, 'executor': self.author1.pk,
-                 'label': self.label1.pk}
+                 'labels': self.label1.pk}
             
         # Логинимся под первым пользователем, получаем response по id=1,
         # обновляем данные задачи
@@ -305,7 +305,7 @@ class TaskDeleteViewTest(TestCase):
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
         )
-        self.task1.label.add(self.label)
+        self.task1.labels.add(self.label)
 
         self.task2 = Tasks.objects.create(
             author='White_Wolf', 
@@ -313,7 +313,7 @@ class TaskDeleteViewTest(TestCase):
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
         )
-        self.task1.label.add(self.label)   
+        self.task1.labels.add(self.label)   
 
     def test_view_url_exists_at_desired_location(self):
 

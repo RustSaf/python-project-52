@@ -36,7 +36,6 @@ class LabelForm(ModelForm):
         }
         widgets = {
             'name': forms.TextInput(attrs={
-                'name': "name",
                 'maxlength': "150",
                 'class': "form-control",
                 'placeholder': _("Name"),

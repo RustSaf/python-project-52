@@ -170,7 +170,7 @@ class LabelUpdateViewTest(TestCase):
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
         )
-        self.task.label.add(self.label1)      
+        self.task.labels.add(self.label1)      
  
     def test_view_url_exists_at_desired_location(self):
 
@@ -246,7 +246,7 @@ class LabelDeleteViewTest(TestCase):
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
         )
-        self.task.label.add(self.label)
+        self.task.labels.add(self.label)
 
     def test_view_url_exists_at_desired_location(self):
 
@@ -266,7 +266,7 @@ class LabelDeleteViewTest(TestCase):
         # Обновляем данные задачи, освобождая поле метки
         data = {'name': 'Task1', 'discription': 'Discription for Task1',
                  'status': self.status.pk, 'executor': self.author.pk}
-        self.task.label.clear()
+        self.task.labels.clear()
         self.client.post('/tasks/1/update/', data)
 
         # Логинимся и получаем response по id=1 (метка освобождена

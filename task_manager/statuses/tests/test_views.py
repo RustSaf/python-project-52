@@ -171,7 +171,7 @@ class StatusUpdateViewTest(TestCase):
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
         )
-        self.task.label.add(self.label) 
+        self.task.labels.add(self.label) 
  
     def test_view_url_exists_at_desired_location(self):
 
@@ -246,7 +246,7 @@ class StatusDeleteViewTest(TestCase):
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
         )
-        self.task.label.add(self.label)
+        self.task.labels.add(self.label)
 
     def test_view_url_exists_at_desired_location(self):
 

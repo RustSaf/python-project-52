@@ -133,7 +133,7 @@ class LabelDeleteView(LoginRequiredMixin, DeleteView):
 
     def post(self, request, *args, **kwargs):
         label_id = kwargs.get('pk') 
-        if Tasks.objects.filter(label=label_id):
+        if Tasks.objects.filter(labels=label_id):
             messages.error(
                 request,
                 _('Cannot delete label because it is in use'),

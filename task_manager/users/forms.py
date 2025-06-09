@@ -14,7 +14,6 @@ class UserForm(ModelForm):
         required=True,
         label=_("First name"),
         widget=forms.TextInput(attrs={
-            'name': "first_name",
             'maxlength': "150",
             'class': "form-control",
             'placeholder': _("Name"),
@@ -25,7 +24,6 @@ class UserForm(ModelForm):
         required=True,
         label=_("Last name"),
         widget=forms.TextInput(attrs={
-            'name': "last_name",
             'maxlength': "150",
             'class': "form-control",
             'placeholder': _("Surname"),
@@ -39,7 +37,6 @@ class UserForm(ModelForm):
             Letters, numbers and symbols only @/./+/-/_."""
             ),
         widget=forms.TextInput(attrs={
-            'name': "username",
             'maxlength': "150",
             'class': "form-control",
             'placeholder': _("Username"),

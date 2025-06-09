@@ -31,7 +31,7 @@ class TaskForm(ModelForm):
         model = Tasks
         fields = [
             'id', 'name', 'author', 'discription',
-            'status', 'executor', 'label'
+            'status', 'executor', 'labels'
         ]
         required = True
         label = {
@@ -44,7 +44,6 @@ class TaskForm(ModelForm):
         }
         widgets = {
             'name': forms.TextInput(attrs={
-                'name': "name",
                 'maxlength': "150",
                 'class': "form-control",
                 'placeholder': _("Name"),
@@ -53,7 +52,6 @@ class TaskForm(ModelForm):
             }),
             'author': forms.HiddenInput(),
             'discription': forms.Textarea(attrs={
-                'name': "discription",
                 'cols': "40",
                 'rows': "10",
                 'class': "form-control",
@@ -61,22 +59,19 @@ class TaskForm(ModelForm):
                 'id': "id_discription",
             }),
             'status': forms.Select(attrs={
-                'name': "status",
                 'class': "form-select",
                 'placeholder': _("Status"),
                 'id': "id_status",
             }),
             'executor': forms.Select(attrs={
-                'name': "executor",
                 'class': "form-select",
                 'placeholder': _("Executor"),
                 'id': "id_executor",
             }),
-            'label': forms.SelectMultiple(attrs={
-                'name': "labels",
+            'labels': forms.SelectMultiple(attrs={
                 'class': "form-select",
                 'placeholder': _("Labels"),
-                'id': "id_label",
+                'id': "id_labels",
             })
         }
 
