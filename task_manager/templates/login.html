@@ -15,9 +15,9 @@
   {% endif %}
 
   <div class="mb-3">
-  <label class="form-label" for="{{ form.id_username }}"> {% translate form.username.label %} </label>
+  <label class="form-label" for="{{ form.username.id_for_label }}"> {% translate form.username.label %} </label>
     {{ form.username }}
-  <label class="form-label" for="{{ form.id_password1 }}"> {% translate form.password.label %} </label>
+  <label class="form-label" for="{{ form.password.id_for_label }}"> {% translate form.password.label %} </label>
     {{ form.password }}  
   </div>
 
