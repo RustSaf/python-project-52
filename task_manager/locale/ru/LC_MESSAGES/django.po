@@ -441,7 +441,7 @@ msgstr "Пользователь успешно изменен"
 #: task_manager/users/tests/test_views.py:381 task_manager/users/views.py:79
 #: task_manager/users/views.py:132
 msgid "You do not have permission to modify another user"
-msgstr "У вас нет разрешения на изменение другого пользователя"
+msgstr "У вас нет прав для изменения другого пользователя"
 
 #: task_manager/users/tests/test_views.py:374 task_manager/users/views.py:144
 msgid "User deleted successfully"
