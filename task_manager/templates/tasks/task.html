@@ -1,0 +1,56 @@
+{% extends "index.html" %}
+
+{% load i18n %}
+
+
+{% block context %}
+
+
+<div class="card">
+  <div class="card-header bg-secondary text-white">
+    <h2>{{ task.name }}</h2>
+  </div>
+  <div class="card-body bg-light">
+    <p>{{ task.discription }}</p>
+    <hr>
+    <div class="container">
+      <div class="row p-1">
+        <div class="col">{% translate 'Author' %}</div>
+        <div class="col">{{ task.author }}</div>
+      </div>
+      <div class="row p-1">
+        <div class="col">{% translate 'Executor' %}</div>
+        <div class="col">{{ task.executor }}</div>
+      </div>
+      <div class="row p-1">
+        <div class="col">{% translate 'Status' %}</div>
+        <div class="col">{{ task.status }}</div>
+      </div>
+      <div class="row p-1">
+        <div class="col">{% translate 'Creation date' %}</div>
+        <div class="col">{{ task.created_at }}</div>
+      </div>
+      <div class="row p-1">
+        <div class="col">
+          <h6>{% translate 'Labels' %}:</h6>
+          <ul>
+              {% for label in task.labels.all %}
+              <li>{{ label }}</li>
+              {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="row p-1">
+        <div class="col">
+            <td>
+              <a href="/tasks/{{ task.id }}/update/">{% translate 'Сhange' %}</a>
+              <br>
+              <a href="/tasks/{{ task.id }}/delete/">{% translate 'Delete' %}</a>
+            </td>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

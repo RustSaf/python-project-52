@@ -1,6 +1,6 @@
 # Create your tests here.
 from django.test import TestCase
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from task_manager.tasks.forms import TaskForm, TaskUpdateForm
@@ -193,19 +193,19 @@ class TaskUpdateViewTest(TestCase):
             )
 
         self.task1 = Tasks.objects.create(
-            author='White_Wolf', 
+            author=self.author1, 
             name='Task1', discription='Discription for Task1',
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
-        )
+            )
         self.task1.labels.add(self.label1)
 
         self.task2 = Tasks.objects.create(
-            author='White_Wolf', 
+            author=self.author1, 
             name='Task4', discription='Discription for Task4',
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
-        )
+            )
         self.task2.labels.add(self.label1)      
 
     def test_view_url_exists_at_desired_location(self):
@@ -289,7 +289,7 @@ class TaskDeleteViewTest(TestCase):
             first_name='Daenerys', last_name='Targaryen',
             username='Born_of_the_Storm',
             password='12345'
-        )
+            )
 
         self.status = Statuses.objects.create(
             name='Status1'
@@ -300,26 +300,26 @@ class TaskDeleteViewTest(TestCase):
             )
 
         self.task1 = Tasks.objects.create(
-            author='White_Wolf', 
+            author=self.author1, 
             name='Task1', discription='Discription for Task1',
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
-        )
+            )
         self.task1.labels.add(self.label)
 
         self.task2 = Tasks.objects.create(
-            author='White_Wolf', 
+            author=self.author1, 
             name='Task2', discription='Discription for Task2',
             status=Statuses.objects.get(id=1),
             executor=Users.objects.get(id=1),
-        )
-        self.task1.labels.add(self.label)   
+            )
+        self.task2.labels.add(self.label)   
 
     def test_view_url_exists_at_desired_location(self):
 
         # Логинимся и получаем response
         self.client.login(username='White_Wolf', password='12345')
-        resp = self.client.get('/tasks/1/delete/', follow=True)
+        resp = self.client.get('/tasks/1/delete/')
         # Проверка ответа на запрос
         self.assertEqual(resp.status_code, 200)
 
@@ -361,3 +361,74 @@ class TaskDeleteViewTest(TestCase):
                          _('A task can only be deleted by its author'))
         self.assertEqual(message.tags, 'alert alert-danger error')
 
+
+class TaskInfoViewTest(TestCase):
+
+    def setUp(self):
+
+        self.author1 = Users.objects.create_user(
+            first_name='John', last_name='Snow',
+            username='White_Wolf',
+            password='12345'
+            )
+
+        self.author2 = Users.objects.create_user(
+            first_name='Daenerys', last_name='Targaryen',
+            username='Born_of_the_Storm',
+            password='12345'
+            )
+
+        self.status = Statuses.objects.create(
+            name='Status1'
+            )
+
+        self.label1 = Labels.objects.create(
+            name='Label1'
+            )
+
+        self.label2 = Labels.objects.create(
+            name='Label2'
+            )
+
+        self.task = Tasks.objects.create(
+            author=self.author1,
+            name='Task1', discription='Discription for Task1',
+            status=Statuses.objects.get(id=1),
+            executor=Users.objects.get(id=2),
+            )
+        self.task.labels.add(self.label1, self.label2)
+  
+    def test_view_url_exists_at_desired_location(self):
+
+        # Логинимся и получаем response
+        self.client.login(username='White_Wolf', password='12345')
+        resp = self.client.get('/tasks/1', follow=True)
+
+        # Проверка ответа на запрос
+        self.assertEqual(resp.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+
+        # Логинимся и получаем response
+        self.client.login(username='White_Wolf', password='12345')
+        resp = self.client.get('/tasks/1', follow=True)
+
+        # Проверка корректности template
+        self.assertTemplateUsed(resp, 'tasks/task.html')
+
+    def test_redirect_if_not_logged_in(self):
+        
+        # Не залогиненый пользователь получает response
+        resp1 = self.client.get('/tasks/1/', follow=True)
+        resp2 = self.client.get('/tasks/1/update/', follow=True)
+        resp3 = self.client.get('/tasks/1/delete/', follow=True)
+        self.assertRedirects(resp1, '/login/?next=/tasks/1/')
+        self.assertRedirects(resp2, '/login/?next=/tasks/1/update/')
+        self.assertRedirects(resp3, '/login/?next=/tasks/1/delete/')
+
+        # Cмотрим текст сообщения и тэг
+        messages_list = list(resp1.context['messages'])
+        message = messages_list[0]
+        self.assertEqual(message.message,
+                         _('You are not logged in! Please sign in.'))
+        self.assertEqual(message.tags, 'alert alert-danger error')

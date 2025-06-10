@@ -8,6 +8,10 @@ urlpatterns = [
         IndexView.as_view(),
         name='task_index'
         ),
+    path('<int:pk>/',
+        TaskInfoView.as_view(),
+        name='task_info',
+        ),
     path('create/',
         TaskCreateView.as_view(),
         name='task_create',

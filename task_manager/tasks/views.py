@@ -71,6 +71,28 @@ class IndexView(LoginRequiredMixin, View):
         })
 
 
+class TaskInfoView(LoginRequiredMixin, View):
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            messages.error(
+                request,
+                _('You are not logged in! Please sign in.'),
+                extra_tags='alert alert-danger'
+                )
+            return self.handle_no_permission()
+        return super(
+            LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
+    
+    def get(self, request, *args, **kwargs):
+        task_id = kwargs.get('pk') 
+        task = Tasks.objects.get(id=task_id)
+        return render(request, 'tasks/task.html', context={
+           'name': _('View a task'),
+            'task': task,
+        })
+
+
 class TaskCreateView(LoginRequiredMixin, CreateView):
     
     model = Tasks
@@ -167,7 +189,7 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
     def get(self, request, *args, **kwargs):
         task_id = kwargs.get('pk') 
         task = Tasks.objects.get(id=task_id)
-        author = request.user.username
+        author = request.user.get_full_name()
         if task.author == author:
             return render(request, 'tasks/delete.html', context={
                 'name': _('Deleting a task'),
