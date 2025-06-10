@@ -56,7 +56,7 @@ class TaskForm(ModelForm):
                 'rows': "10",
                 'class': "form-control",
                 'placeholder': _("Discription"),
-                'id': "id_discription",
+                'id': "id_description",
             }),
             'status': forms.Select(attrs={
                 'required': "True",
