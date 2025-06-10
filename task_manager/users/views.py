@@ -1,12 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import CreateView
 
-from .forms import *
+from .forms import UserForm, UserUpdateForm
 from .models import Users
 
 

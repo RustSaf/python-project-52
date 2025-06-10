@@ -8,7 +8,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from task_manager.tasks.models import Tasks
 
-from .forms import *
+from .forms import StatusForm, StatusUpdateForm
 from .models import Statuses
 
 

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import *
+from .views import IndexView, LabelCreateView, LabelDeleteView, LabelUpdateView
 
 app_name = "labels"
 urlpatterns = [

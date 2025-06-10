@@ -10,7 +10,7 @@ from task_manager.labels.models import Labels
 from task_manager.statuses.models import Statuses
 from task_manager.users.models import Users
 
-from .forms import *
+from .forms import TaskForm, TaskUpdateForm
 from .models import Tasks
 
 

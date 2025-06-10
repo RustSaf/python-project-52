@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from task_manager.users.forms import LoginUserForm, UserForm, UserUpdateForm
