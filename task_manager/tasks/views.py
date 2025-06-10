@@ -118,6 +118,11 @@ class TaskCreateView(LoginRequiredMixin, CreateView):
             response = form.save(commit=False)
             response.author = request.user
             response.save()
+            name = form.cleaned_data.get('name', '')
+            labels = form.cleaned_data.get('labels', '')
+            task = Tasks.objects.get(name=name)
+            task.labels.add(*labels)
+            task.save()
             messages.success(
                 request,
                 _('Task created successfully'),
