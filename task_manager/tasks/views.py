@@ -35,7 +35,7 @@ class IndexView(LoginRequiredMixin, View):
 
         status_id = request.GET.get('status')
         executor_id = request.GET.get('executor')
-        label_id = request.GET.get('labels')
+        label_id = request.GET.get('label')
         is_self_tasks = request.GET.get('self_tasks')
 
         status = Statuses.objects.get(id=status_id) if status_id else None
@@ -48,7 +48,7 @@ class IndexView(LoginRequiredMixin, View):
         task_executor = Tasks.objects.filter(
             executor=executor_id) if executor_id else Tasks.objects.all()
         task_label = Tasks.objects.filter(
-            label=label_id) if label_id else Tasks.objects.all()
+            labels=label_id) if label_id else Tasks.objects.all()
         self_tasks = Tasks.objects.filter(
             author=user) if (user and is_self_tasks) else Tasks.objects.all()
 
